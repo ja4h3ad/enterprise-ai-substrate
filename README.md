@@ -2,7 +2,7 @@
 
 ## Architectural thesis
 
-> Why I chose "substrate" - because in AI hardware, a substrate is the ultra-thin base layer that connects, supports and facilitates communication between multiple chips (GPUs), high-bandwidth memory, etc inside a single processor package.  Because modern AI demands massive speed and power, AI substrates are highly advanced interconnects.  
+> Why I chose "substrate" (in other words, no, Claude did not choose this term - I came up with it myself LOL).  In AI hardware, a substrate is the ultra-thin base layer that connects, supports and facilitates communication between multiple chips (GPUs), high-bandwidth memory, etc inside a single processor package.  Because modern AI demands massive speed and power, AI substrates are highly advanced interconnects.  
 > Sophisticated enterprises with high volume AI usage, multiple teams building agents and mulitple systems being accessed by those agents, require this high-power, high-capacity and highly capable AI substrate.   
 
 The architecture begins with a **business need, user interaction, application request, or enterprise event**—not with a model. It then applies identity and policy, exposes reusable AI application services, coordinates agentic workflows, grounds reasoning in semantic knowledge, invokes approved enterprise capabilities, maintains durable state, and continuously evaluates behavior and business outcomes.
@@ -111,7 +111,33 @@ These are logical application services, not individual prompts.
 
 ### 4. Agent and workflow orchestration
 
-The orchestration layer manages sequential and parallel agent patterns, branching, retries, checkpoints, human approval, tool selection, long-running workflows, exception handling, fan-out/fan-in, compensation, and rollback.
+The orchestration layer manages sequential and parallel agent patterns, branching, retries, checkpoints, human approval, tool selection, long-running workflows, exception handling, fan-out/fan-in, compensation, and rollback.  For reference, a "fan-out" means that one coordinator decomposes a problem into multiple independent workstreams.  An agentic "fan-in" means the convergence of those independent workstreams back into a single decision point.
+
+****An multi-agent that "fans out" (could also be a single agent "fanning out" to multiple Systems of Record via tool calls, etc)
+
+                    Coordinator
+                         |
+       +-----------------+-----------------+
+       |                 |                 |
+ Production Agent   Supplier Agent   Quality Agent
+       |                 |                 |
+     MES               SCM/QMS         Inspection Data
+
+****A "fan-in" (maybe dovetail?):  Here we see the results of each sub-agent competency being synthesized (e.g., via a shared enterprise semantic/ontology layer)
+
+                    Coordinator
+                         |
+       +-----------------+-----------------+
+       |                 |                 |
+ Production Agent   Supplier Agent   Quality Agent
+       |                 |                 |
+       +-----------------+-----------------+
+                         |
+                  Synthesis Agent
+                         |
+                 Recommendation
+
+
 
 > The workflow is the technical expression of the approved business process.
 
@@ -119,16 +145,16 @@ The orchestration layer manages sequential and parallel agent patterns, branchin
 
 The gateway decouples applications from individual models and routes by task, modality, quality, latency, cost, privacy, residency, context needs, availability, and approved-use policy.
 
-The model becomes a replaceable capability behind a governed interface.
+The model becomes a replaceable capability behind a governed interface.  The term I like to use here is "hot swap", or from back in my military days "selective interchange".  
 
 ### 6. Semantic knowledge
 
 Semantic knowledge combines:
 
 - Enterprise ontology
-- RDF triples and knowledge graphs
+- RDF triples and knowledge graphs (or OWL, for a more complex approach).  
 - Canonical entity resolution
-- Vector and lexical retrieval
+- Vector (semantic) and knowledge graph (graph DB) retrieval
 - Metadata and entitlement filters
 - Provenance and lineage
 - Domain rules and constraints
@@ -164,7 +190,7 @@ Conversation history is not the business source of truth. Structured workflow an
 Evaluation spans the whole decision system:
 
 - Query and task formulation
-- Retrieval recall, precision, MRR, and nDCG
+- Retrieval recall, precision, MRR, and nDCG: WARNING - Information Retrieval is still very much a science and not a SWAG.  
 - Ranking and context assembly
 - Groundedness and citation quality
 - Reasoning and plan quality
@@ -184,7 +210,7 @@ Production traces feed replay, regression, anomaly detection, drift analysis, an
 
 **CI/CD:** automated tests and evaluation gates; SAST, DAST, SCA, IaC scanning; staged deployment; versioning; rollback and reproducibility.
 
-**FinOps:** model and infrastructure economics, cost per completed business outcome, routing, caching, capacity tradeoffs, and ROI.
+**FinOps:** model and infrastructure economics (more lovingly, tokenomics), cost per completed business outcome, routing, caching, capacity tradeoffs, and ROI.
 
 ## TOGAF alignment
 
@@ -225,19 +251,3 @@ flowchart LR
 The agents use common entities such as VIN, production order, plant, line, shift, machine, tool, process step, part lot, supplier, inspection, defect, and quality case. They investigate different domains in parallel while preserving a shared semantic and evidentiary model.
 
 The graph narrows the investigation and surfaces structurally related evidence. It does not independently prove causality.
-
-## Opening narrative
-
-> I have been thinking about how an enterprise at Toyota's scale might embed an AI substrate into its corporate operating system—not as a separate collection of pilots, and not as a model attached to every application, but as a governed set of reusable capabilities.
->
-> I would start with the business process, user, application, or enterprise event. Identity and policy establish who is acting and what data or actions are permitted. AI application services expose reusable business capabilities, while an orchestration layer coordinates stateful workflows, specialist agents, human approvals, and enterprise tools.
->
-> Beneath that, I would separate three core forms of intelligence: approved models behind a model broker; semantic knowledge combining ontology, RDF or knowledge graphs, and vector retrieval; and composable enterprise capabilities spanning systems such as ERP, MES, PLM, QMS, and SCM.
->
-> A2A- or ACP-style coordination allows agents to delegate tasks and exchange artifacts, while a durable state layer preserves workflow state, provenance, events, and operational truth. Evaluation and behavioral intelligence then determine whether the overall decision system—not only the model—is reliable, safe, economically viable, and producing the intended business result.
->
-> TOGAF gives us the lifecycle, viewpoints, and governance process. This reference architecture supplies the AI-specific building blocks that would be developed inside that process.
-
-## Closing statement
-
-> The objective is not to deploy an isolated agent. It is to make AI a governed, observable, and replaceable participant in Toyota's existing enterprise architecture.
