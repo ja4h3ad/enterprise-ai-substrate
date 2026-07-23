@@ -2,8 +2,8 @@
 
 ## Architectural thesis
 
-> Why I chose "substrate" (in other words, no, Claude did not choose this term - I came up with it myself LOL).  In AI hardware, a substrate is the ultra-thin base layer that connects, supports and facilitates communication between multiple chips (GPUs), high-bandwidth memory, etc inside a single processor package.  Because modern AI demands massive speed and power, AI substrates are highly advanced interconnects.  
-> Sophisticated enterprises with high volume AI usage, multiple teams building agents and mulitple systems being accessed by those agents, require this high-power, high-capacity and highly capable AI substrate.   
+> Why I chose "substrate" (in other words, no, Claude did not choose this term - I came up with it myself LOL).  In science (biology and ecology) a substrate is the base surface or foundational medium upon which an organism grows, moves, or attaches itself.In AI hardware, a substrate is the ultra-thin base layer that connects, supports and facilitates communication between multiple chips (GPUs), high-bandwidth memory, etc inside a single processor package.  Because modern AI demands massive speed and power, AI substrates are highly advanced interconnects.  
+> Sophisticated enterprises with high volume AI usage, multiple teams building agents and mulitple systems being accessed by those agents, require this high-power, high-capacity and highly capable AI substrate. The very living fabric/foundational mdeium upon which enterprise AI can grow.   
 
 The architecture begins with a **business need, user interaction, application request, or enterprise event**—not with a model. It then applies identity and policy, exposes reusable AI application services, coordinates agentic workflows, grounds reasoning in semantic knowledge, invokes approved enterprise capabilities, maintains durable state, and continuously evaluates behavior and business outcomes.
 
