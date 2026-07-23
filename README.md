@@ -2,7 +2,8 @@
 
 ## Architectural thesis
 
-> Toyota does not need a collection of disconnected AI pilots. It needs a governed AI substrate that allows models, enterprise knowledge, agents, and operational systems to participate safely in the corporate operating system.
+> Why I chose "substrate" - because in AI hardware, a substrate is the ultra-thin base layer that connects, supports and facilitates communication between multiple chips (GPUs), high-bandwidth memory, etc inside a single processor package.  Because modern AI demands massive speed and power, AI substrates are highly advanced interconnects.  
+> Sophisticated enterprises with high volume AI usage, multiple teams building agents and mulitple systems being accessed by those agents, require this high-power, high-capacity and highly capable AI substrate.   
 
 The architecture begins with a **business need, user interaction, application request, or enterprise event**—not with a model. It then applies identity and policy, exposes reusable AI application services, coordinates agentic workflows, grounds reasoning in semantic knowledge, invokes approved enterprise capabilities, maintains durable state, and continuously evaluates behavior and business outcomes.
 
