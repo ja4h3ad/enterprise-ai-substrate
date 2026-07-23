@@ -71,7 +71,6 @@ flowchart TB
     classDef guardrail fill:#fefce8,stroke:#ca8a04,stroke-width:2px,color:#422006;
 ```
 
-GitHub renders Mermaid diagrams directly inside Markdown, so this file is usable in a normal repository without GitHub Pages.
 
 ## Walkthrough
 
