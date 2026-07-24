@@ -113,7 +113,7 @@ These are logical application services, not individual prompts.
 
 The orchestration layer manages sequential and parallel agent patterns, branching, retries, checkpoints, human approval, tool selection, long-running workflows, exception handling, fan-out/fan-in, compensation, and rollback.  For reference, a "fan-out" means that one coordinator decomposes a problem into multiple independent workstreams.  An agentic "fan-in" means the convergence of those independent workstreams back into a single decision point.
 
-****An multi-agent that "fans out" (could also be a single agent "fanning out" to multiple Systems of Record via tool calls, etc)
+#### An multi-agent that "fans out" (could also be a single agent "fanning out" to multiple Systems of Record via tool calls, etc)
 
 ```
 
@@ -127,8 +127,8 @@ The orchestration layer manages sequential and parallel agent patterns, branchin
 
 ```
 
-****A "fan-in" (maybe dovetail?):  Here we see the results of each sub-agent competency being synthesized (e.g., via a shared enterprise semantic/ontology layer)
-
+##### A "fan-in" (maybe dovetail?):  Here we see the results of each sub-agent competency being synthesized (e.g., via a shared enterprise semantic/ontology layer)
+```
                     Coordinator
                          |
        +-----------------+-----------------+
@@ -140,7 +140,7 @@ The orchestration layer manages sequential and parallel agent patterns, branchin
                   Synthesis Agent
                          |
                  Recommendation
-
+```
 
 
 > The workflow is the technical expression of the approved business process.
