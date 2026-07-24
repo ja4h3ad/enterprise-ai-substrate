@@ -115,6 +115,8 @@ The orchestration layer manages sequential and parallel agent patterns, branchin
 
 ****An multi-agent that "fans out" (could also be a single agent "fanning out" to multiple Systems of Record via tool calls, etc)
 
+```
+
                     Coordinator
                          |
        +-----------------+-----------------+
@@ -122,6 +124,8 @@ The orchestration layer manages sequential and parallel agent patterns, branchin
  Production Agent   Supplier Agent   Quality Agent
        |                 |                 |
      MES               SCM/QMS         Inspection Data
+
+```
 
 ****A "fan-in" (maybe dovetail?):  Here we see the results of each sub-agent competency being synthesized (e.g., via a shared enterprise semantic/ontology layer)
 
