@@ -151,7 +151,7 @@ The gateway decouples applications from individual models and routes by task, mo
 
 The model becomes a replaceable capability behind a governed interface.  The term I like to use here is "hot swap", or from back in my military days "selective interchange".  
 
-### 6. Semantic knowledge
+### 6. Semantic knowledge - I call it the "Native Language of the Enterprise".  
 
 Semantic knowledge combines:
 
