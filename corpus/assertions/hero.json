@@ -1,0 +1,72 @@
+[
+  {
+    "subject": "DOC-ATLAS-MNSA-2025",
+    "predicate": "REPRESENTS",
+    "object": "CONTRACT-ATLAS-001",
+    "source_clause_id": "CLAUSE-ATLAS-1.1",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "DOC-ATLAS-MNSA-2025",
+    "predicate": "CONTAINS",
+    "object": "CLAUSE-ATLAS-8.2",
+    "source_clause_id": "CLAUSE-ATLAS-8.2",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-8.2",
+    "predicate": "LOCATED_ON",
+    "object": "DOC-ATLAS-MNSA-2025:PAGE:002",
+    "source_clause_id": "CLAUSE-ATLAS-8.2",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-8.2",
+    "predicate": "EXTRACTED_FROM",
+    "object": "CLAUSE-ATLAS-8.2:CHUNK:001",
+    "source_clause_id": "CLAUSE-ATLAS-8.2",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "DOC-ATLAS-AMENDMENT-001",
+    "predicate": "AMENDS",
+    "object": "CONTRACT-ATLAS-001",
+    "source_clause_id": "CLAUSE-ATLAS-A1-1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-ATLAS-AMENDMENT-001",
+    "predicate": "CONTAINS",
+    "object": "CLAUSE-ATLAS-A1-2",
+    "source_clause_id": "CLAUSE-ATLAS-A1-2",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-A1-2",
+    "predicate": "MODIFIES",
+    "object": "CLAUSE-ATLAS-8.2",
+    "source_clause_id": "CLAUSE-ATLAS-A1-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-A1-2",
+    "predicate": "SUPERSEDES",
+    "object": "CLAUSE-ATLAS-8.2",
+    "source_clause_id": "CLAUSE-ATLAS-A1-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-A1-2",
+    "predicate": "LOCATED_ON",
+    "object": "DOC-ATLAS-AMENDMENT-001:PAGE:001",
+    "source_clause_id": "CLAUSE-ATLAS-A1-2",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-A1-2",
+    "predicate": "EXTRACTED_FROM",
+    "object": "CLAUSE-ATLAS-A1-2:CHUNK:001",
+    "source_clause_id": "CLAUSE-ATLAS-A1-2",
+    "population_method": "document_structure"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "assertions": "assertions/hero.json",
+  "corpus_version": "hero-v1",
+  "documents": [
+    "documents/atlas-managed-network-services.md",
+    "documents/atlas-termination-amendment.md"
+  ]
+}

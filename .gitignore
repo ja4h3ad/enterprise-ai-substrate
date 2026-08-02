@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ContractGraph runtime artifacts and optional local model cache
+.contractgraph/
+.model-cache/

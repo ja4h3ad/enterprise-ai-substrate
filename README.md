@@ -1,4 +1,21 @@
-# Enterprise AI Substrate
+# ContractGraph
+
+ContractGraph is a production-minded proof of concept for trustworthy, graph-grounded agentic retrieval over a completely fictional enterprise IT contract corpus. The first tracer-bullet slice establishes deterministic clause-level provenance for a base contract and its amendment; later slices add retrieval, orchestration, evaluation, and an interview UI.
+
+The content is synthetic, represents no real company or supplier, and is not legal advice.
+
+## Provenance quickstart
+
+```bash
+uv sync
+uv run contractgraph ingest
+uv run contractgraph inspect
+uv run pytest
+```
+
+Ingestion deterministically writes portable artifacts beneath `.contractgraph/artifacts/`. Each RDF-like triple records its subject, predicate, object, source clause, and population method. Re-running ingestion from the canonical Markdown sources produces the same identifiers and logical artifact digest.
+
+## Enterprise AI Substrate
 
 ## Architectural thesis
 
