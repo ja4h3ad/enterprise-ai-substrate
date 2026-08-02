@@ -1,0 +1,43 @@
+{
+  "question": "How much notice must Atlas Network Services provide before terminating for convenience?",
+  "plan": {
+    "intent": "amendment_sensitive_obligation",
+    "entities": [
+      "Atlas Network Services"
+    ],
+    "constraints": {
+      "clause_type": "termination_for_convenience",
+      "operative_at": "current"
+    },
+    "retrieval_query": "termination for convenience notice",
+    "contract_id": "CONTRACT-ATLAS-001",
+    "base_clause_id": "CLAUSE-ATLAS-8.2",
+    "retrievers": [
+      "lexical",
+      "vector",
+      "graph"
+    ],
+    "required_evidence": [
+      "base_clause",
+      "applicable_amendment",
+      "supersession_path",
+      "operative_clause",
+      "source_provenance"
+    ]
+  },
+  "reformulation": {
+    "retrieval_query": "section 8.2 termination notice amendment replacement"
+  },
+  "synthesis": {
+    "answer": "Atlas Network Services must provide at least ninety (90) days' prior written notice before terminating for convenience.",
+    "claims": [
+      {
+        "claim_id": "CLAIM-001",
+        "text": "Atlas Network Services must provide at least ninety (90) days' prior written notice before terminating for convenience.",
+        "evidence_ids": [
+          "E-CLAUSE-ATLAS-A1-2"
+        ]
+      }
+    ]
+  }
+}
