@@ -11,12 +11,15 @@ uv sync
 uv run contractgraph ingest
 uv run contractgraph inspect
 uv run contractgraph compare
+uv run contractgraph run
 uv run pytest
 ```
 
 Ingestion deterministically writes portable artifacts beneath `.contractgraph/artifacts/`. Each RDF-like triple records its subject, predicate, object, source clause, and population method. Re-running ingestion from the canonical Markdown sources produces the same identifiers and logical artifact digest.
 
 The comparison command makes the first retrieval thesis visible: an exact local vector baseline selects the original 60-day termination clause, while a bounded typed graph traversal follows the amendment and returns the operative 90-day language with its path and exact citation. This tracer slice uses a deterministic token-frequency embedding behind the vector interface; the planned semantic-retrieval slice replaces it with a pinned local Sentence Transformers model.
+
+The agent command runs the same hero question through an explicit replay-backed LangGraph state machine. Lexical, vector, and graph retrieval execute in one fan-out super-step; Reciprocal Rank Fusion, a deterministic amendment evidence contract, structured synthesis, and citation verification follow. LangGraph checkpoints and domain trace events are persisted in SQLite beneath `.contractgraph/`, and no OpenAI key is required.
 
 ## Enterprise AI Substrate
 

@@ -6,6 +6,12 @@ import argparse
 from pathlib import Path
 from typing import Sequence
 
+from contractgraph.application import (
+    DEFAULT_REPLAY_FIXTURE,
+    DEFAULT_STATE_DB,
+    ContractGraphApplication,
+    render_answer,
+)
 from contractgraph.artifacts import load_corpus
 from contractgraph.comparison import (
     HERO_QUESTION,
@@ -37,6 +43,12 @@ def build_parser() -> argparse.ArgumentParser:
     compare.add_argument("--question", default=HERO_QUESTION)
     compare.add_argument("--retrieval-query", default=HERO_RETRIEVAL_QUERY)
     compare.add_argument("--artifacts", type=Path, default=DEFAULT_ARTIFACT_ROOT)
+
+    run = subparsers.add_parser("run", help="run the bounded replay-backed agent workflow")
+    run.add_argument("--question", default=HERO_QUESTION)
+    run.add_argument("--artifacts", type=Path, default=DEFAULT_ARTIFACT_ROOT)
+    run.add_argument("--state-db", type=Path, default=DEFAULT_STATE_DB)
+    run.add_argument("--replay-fixture", type=Path, default=DEFAULT_REPLAY_FIXTURE)
     return parser
 
 
@@ -62,6 +74,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             arguments.question, retrieval_query=arguments.retrieval_query
         )
         print(render_comparison(comparison), end="")
+        return 0
+    if arguments.command == "run":
+        with ContractGraphApplication(
+            artifact_root=arguments.artifacts,
+            state_db=arguments.state_db,
+            replay_fixture=arguments.replay_fixture,
+        ) as application:
+            result = application.run(arguments.question)
+        print(render_answer(result), end="")
         return 0
     raise AssertionError(f"Unhandled command: {arguments.command}")
 

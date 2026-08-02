@@ -6,11 +6,14 @@ import subprocess
 import sys
 from pathlib import Path
 
+from contractgraph.application import ContractGraphApplication
+from contractgraph.comparison import HERO_QUESTION
 from contractgraph.ingestion import build_corpus
 from contractgraph.retrieval import BM25Retriever
 
 PROJECT_ROOT = Path(__file__).parents[1]
 CORPUS_ROOT = PROJECT_ROOT / "corpus"
+REPLAY_FIXTURE = PROJECT_ROOT / "replay" / "hero.json"
 
 
 def _run_cli(*arguments: str) -> subprocess.CompletedProcess[str]:
@@ -107,3 +110,121 @@ def test_lexical_retrieval_preserves_exact_contract_language() -> None:
         "CLAUSE-ATLAS-8.2"
     )
     assert retriever.search("sixty 60 days", limit=1)[0].clause_id == "CLAUSE-ATLAS-8.2"
+
+
+def test_application_runs_bounded_replay_workflow_and_persists_trace(
+    tmp_path: Path,
+) -> None:
+    artifact_root = tmp_path / "artifacts"
+    state_db = tmp_path / "state.db"
+    _run_cli(
+        "ingest",
+        "--corpus",
+        str(CORPUS_ROOT),
+        "--artifacts",
+        str(artifact_root),
+    )
+
+    with ContractGraphApplication(
+        artifact_root=artifact_root,
+        state_db=state_db,
+        replay_fixture=REPLAY_FIXTURE,
+    ) as application:
+        result = application.run(HERO_QUESTION)
+        persisted = application.read_persisted_run(result.run_id)
+        checkpoints = application.checkpoint_history(result.run_id)
+
+    assert result.status == "answered"
+    assert result.answer == (
+        "Atlas Network Services must provide at least ninety (90) days' prior written "
+        "notice before terminating for convenience."
+    )
+    assert result.iterations == 1
+    assert result.model_calls == 2
+    assert result.limits.max_retrieval_iterations == 2
+    assert result.limits.max_graph_depth == 3
+    assert result.fused_candidates[0].clause_id == "CLAUSE-ATLAS-A1-2"
+    assert result.claims[0].evidence_ids == ("E-CLAUSE-ATLAS-A1-2",)
+    assert result.citations[0].clause_id == "CLAUSE-ATLAS-A1-2"
+    assert result.citations[0].page_number == 1
+    assert result.citations[0].section == "2"
+    assert [step.predicate for step in result.graph_paths] == [
+        "AMENDS",
+        "CONTAINS",
+        "SUPERSEDES",
+    ]
+    trace_nodes = {event.node for event in result.trace_events}
+    assert {
+        "analyze_and_plan",
+        "lexical_retrieve",
+        "vector_retrieve",
+        "graph_retrieve",
+        "fuse_candidates",
+        "assess_evidence",
+        "synthesize_answer",
+        "verify_citations",
+        "finalize_trace",
+    } <= trace_nodes
+    assert persisted["run"]["status"] == "answered"
+    assert len(persisted["events"]) == len(result.trace_events)
+    assert len(checkpoints) >= 6
+
+
+def test_application_recovery_is_bounded_before_abstention(tmp_path: Path) -> None:
+    artifact_root = tmp_path / "artifacts"
+    state_db = tmp_path / "state.db"
+    fixture = json.loads(REPLAY_FIXTURE.read_text(encoding="utf-8"))
+    fixture["plan"]["base_clause_id"] = "CLAUSE-ATLAS-8.1"
+    replay_fixture = tmp_path / "insufficient.json"
+    replay_fixture.write_text(json.dumps(fixture), encoding="utf-8")
+    _run_cli(
+        "ingest",
+        "--corpus",
+        str(CORPUS_ROOT),
+        "--artifacts",
+        str(artifact_root),
+    )
+
+    with ContractGraphApplication(
+        artifact_root=artifact_root,
+        state_db=state_db,
+        replay_fixture=replay_fixture,
+    ) as application:
+        result = application.run(HERO_QUESTION)
+
+    assert result.status == "insufficient_evidence"
+    assert result.answer is None
+    assert result.iterations == 2
+    assert result.model_calls == 2
+    assert sum(event.node == "reformulate_query" for event in result.trace_events) == 1
+    assert "missing:applicable_amendment" in result.uncertainty_reasons
+    assert "missing:supersession_path" in result.uncertainty_reasons
+
+
+def test_application_rejects_claims_with_unknown_evidence(tmp_path: Path) -> None:
+    artifact_root = tmp_path / "artifacts"
+    state_db = tmp_path / "state.db"
+    fixture = json.loads(REPLAY_FIXTURE.read_text(encoding="utf-8"))
+    fixture["synthesis"]["claims"][0]["evidence_ids"] = ["E-NOT-RETRIEVED"]
+    replay_fixture = tmp_path / "unsupported.json"
+    replay_fixture.write_text(json.dumps(fixture), encoding="utf-8")
+    _run_cli(
+        "ingest",
+        "--corpus",
+        str(CORPUS_ROOT),
+        "--artifacts",
+        str(artifact_root),
+    )
+
+    with ContractGraphApplication(
+        artifact_root=artifact_root,
+        state_db=state_db,
+        replay_fixture=replay_fixture,
+    ) as application:
+        result = application.run(HERO_QUESTION)
+
+    assert result.status == "error"
+    assert result.citations == ()
+    assert result.uncertainty_reasons == (
+        "unknown_evidence:CLAIM-001:E-NOT-RETRIEVED",
+    )
