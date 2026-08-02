@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.12,<3.13"
 license = { text = "Apache-2.0" }
 authors = [{ name = "ContractGraph contributors" }]
-dependencies = []
+dependencies = [
+  "networkx>=3.4,<4",
+]
 
 [project.scripts]
 contractgraph = "contractgraph.cli:main"

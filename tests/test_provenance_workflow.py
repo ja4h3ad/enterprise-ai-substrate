@@ -6,6 +6,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+from contractgraph.ingestion import build_corpus
+from contractgraph.retrieval import BM25Retriever
+
 PROJECT_ROOT = Path(__file__).parents[1]
 CORPUS_ROOT = PROJECT_ROOT / "corpus"
 
@@ -63,3 +66,44 @@ def test_public_ingestion_is_deterministic_and_inspectable(tmp_path: Path) -> No
     assert "DOC-ATLAS-AMENDMENT-001 [Amendment] -> amends CONTRACT-ATLAS-001" in inspection
     assert "CLAUSE-ATLAS-A1-2 --SUPERSEDES--> CLAUSE-ATLAS-8.2" in inspection
     assert "source=CLAUSE-ATLAS-A1-2; method=reviewed_assertion" in inspection
+
+
+def test_public_comparison_exposes_obsolete_and_operative_clauses(tmp_path: Path) -> None:
+    artifact_root = tmp_path / "artifacts"
+    _run_cli(
+        "ingest",
+        "--corpus",
+        str(CORPUS_ROOT),
+        "--artifacts",
+        str(artifact_root),
+    )
+
+    comparison = _run_cli("compare", "--artifacts", str(artifact_root)).stdout
+
+    assert "Deterministic retrieval query: termination for convenience notice" in comparison
+    assert "Lexical retrieval (top 3)\n1. CLAUSE-ATLAS-8.2" in comparison
+    assert "Vector-only baseline\n1. CLAUSE-ATLAS-8.2" in comparison
+    assert "sixty (60) days" in comparison
+    assert "Outcome: INCORRECT" in comparison
+    assert "Graph-grounded resolution" in comparison
+    assert "Operative clause: CLAUSE-ATLAS-A1-2" in comparison
+    assert "ninety (90) days" in comparison
+    assert "Outcome: CORRECT" in comparison
+    assert "CONTRACT-ATLAS-001 <--AMENDS-- DOC-ATLAS-AMENDMENT-001" in comparison
+    assert "DOC-ATLAS-AMENDMENT-001 --CONTAINS-- CLAUSE-ATLAS-A1-2" in comparison
+    assert "CLAUSE-ATLAS-A1-2 --SUPERSEDES-- CLAUSE-ATLAS-8.2" in comparison
+
+
+def test_lexical_retrieval_preserves_exact_contract_language() -> None:
+    retriever = BM25Retriever(build_corpus(CORPUS_ROOT).clauses)
+
+    assert retriever.search("Atlas Network Services", limit=1)[0].clause_id == (
+        "CLAUSE-ATLAS-A1-1"
+    )
+    assert retriever.search("Managed Network Services Agreement", limit=1)[0].clause_id == (
+        "CLAUSE-ATLAS-1.1"
+    )
+    assert retriever.search("Termination for Convenience", limit=1)[0].clause_id == (
+        "CLAUSE-ATLAS-8.2"
+    )
+    assert retriever.search("sixty 60 days", limit=1)[0].clause_id == "CLAUSE-ATLAS-8.2"

@@ -6,6 +6,13 @@ import argparse
 from pathlib import Path
 from typing import Sequence
 
+from contractgraph.artifacts import load_corpus
+from contractgraph.comparison import (
+    HERO_QUESTION,
+    HERO_RETRIEVAL_QUERY,
+    HeroComparisonService,
+    render_comparison,
+)
 from contractgraph.ingestion import artifact_digest, build_corpus, persist_corpus
 from contractgraph.inspection import render_artifact
 
@@ -23,6 +30,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     inspect = subparsers.add_parser("inspect", help="display hierarchy and provenance")
     inspect.add_argument("--artifacts", type=Path, default=DEFAULT_ARTIFACT_ROOT)
+
+    compare = subparsers.add_parser(
+        "compare", help="show vector-only and graph-grounded hero results"
+    )
+    compare.add_argument("--question", default=HERO_QUESTION)
+    compare.add_argument("--retrieval-query", default=HERO_RETRIEVAL_QUERY)
+    compare.add_argument("--artifacts", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     return parser
 
 
@@ -41,6 +55,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if arguments.command == "inspect":
         print(render_artifact(arguments.artifacts), end="")
+        return 0
+    if arguments.command == "compare":
+        artifact = load_corpus(arguments.artifacts)
+        comparison = HeroComparisonService(artifact).compare(
+            arguments.question, retrieval_query=arguments.retrieval_query
+        )
+        print(render_comparison(comparison), end="")
         return 0
     raise AssertionError(f"Unhandled command: {arguments.command}")
 

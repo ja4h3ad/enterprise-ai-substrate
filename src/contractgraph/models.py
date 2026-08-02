@@ -66,3 +66,40 @@ class CorpusArtifact:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+@dataclass(frozen=True, slots=True)
+class SearchResult:
+    clause_id: str
+    document_id: str
+    page_number: int
+    section: str
+    title: str
+    text: str
+    score: float
+    rank: int
+    retriever: str
+
+    @property
+    def citation(self) -> str:
+        return (
+            f"{self.document_id}, p.{self.page_number}, "
+            f"§{self.section}, {self.clause_id}"
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class GraphStep:
+    from_id: str
+    predicate: str
+    to_id: str
+    traversal: Literal["forward", "reverse"]
+    source_clause_id: str
+
+
+@dataclass(frozen=True, slots=True)
+class OperativeClauseResolution:
+    contract_id: str
+    base_clause_id: str
+    operative_clause_id: str
+    path: tuple[GraphStep, ...]
