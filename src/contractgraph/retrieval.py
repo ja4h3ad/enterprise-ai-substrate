@@ -114,6 +114,26 @@ class ExactVectorRetriever:
         return tuple(frequencies[token] / total for token in self._vocabulary)
 
 
+class SemanticVectorRetriever:
+    """Exact local cosine search over embeddings supplied by a pinned-model adapter."""
+
+    def __init__(self, clauses: Sequence[Clause], embedder: object) -> None:
+        self._clauses = tuple(clauses)
+        self._embedder = embedder
+        self.name = f"vector:{getattr(embedder, 'name', 'unknown')}"
+
+    def search(self, query: str, *, limit: int = 20) -> tuple[SearchResult, ...]:
+        _validate_limit(limit)
+        texts = [query, *(f"{clause.title} {clause.text}" for clause in self._clauses)]
+        vectors = self._embedder.encode(texts)
+        query_vector, document_vectors = vectors[0], vectors[1:]
+        scored = [
+            (clause, _cosine(query_vector, vector))
+            for clause, vector in zip(self._clauses, document_vectors, strict=True)
+        ]
+        return _ranked_results(scored, retriever=self.name, limit=limit)
+
+
 def _cosine(left: tuple[float, ...], right: tuple[float, ...]) -> float:
     left_norm = math.sqrt(sum(value * value for value in left))
     right_norm = math.sqrt(sum(value * value for value in right))

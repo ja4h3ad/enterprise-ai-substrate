@@ -1,8 +1,18 @@
 {
   "assertions": "assertions/hero.json",
-  "corpus_version": "hero-v1",
+  "corpus_version": "competency-v2",
+  "entities": "entities.json",
   "documents": [
     "documents/atlas-managed-network-services.md",
-    "documents/atlas-termination-amendment.md"
+    "documents/atlas-termination-amendment.md",
+    "documents/atlas-cybersecurity-exhibit.md",
+    "documents/borealis-cloud-hosting.md",
+    "documents/borealis-security-amendment.md",
+    "documents/cedar-endpoint-support.md",
+    "documents/cedar-renewal-amendment.md",
+    "documents/delta-data-platform.md",
+    "documents/delta-service-level-exhibit.md",
+    "documents/ember-service-desk.md",
+    "documents/fjord-software-license.md"
   ]
 }
