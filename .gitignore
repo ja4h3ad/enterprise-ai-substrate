@@ -178,6 +178,9 @@ dmypy.json
 # pytype static type analyzer
 .pytype/
 
+# Local ContractGraph artifacts, SQLite traces, and checkpoints
+.contractgraph/
+
 # Cython debug symbols
 cython_debug/
 

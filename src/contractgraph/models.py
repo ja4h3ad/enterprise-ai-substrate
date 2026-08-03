@@ -5,8 +5,17 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Any, Literal
 
-DocumentType = Literal["Contract", "Amendment"]
+DocumentType = Literal["Contract", "Amendment", "Exhibit"]
 PopulationMethod = Literal["document_structure", "reviewed_assertion"]
+
+EntityType = Literal[
+    "Party",
+    "Obligation",
+    "Event",
+    "Policy",
+    "ProductOrService",
+    "MissingReference",
+]
 
 
 @dataclass(frozen=True, slots=True)
@@ -46,6 +55,13 @@ class Chunk:
 
 
 @dataclass(frozen=True, slots=True)
+class Entity:
+    entity_id: str
+    entity_type: EntityType
+    name: str
+
+
+@dataclass(frozen=True, slots=True)
 class Triple:
     subject: str
     predicate: str
@@ -62,6 +78,7 @@ class CorpusArtifact:
     pages: tuple[Page, ...]
     clauses: tuple[Clause, ...]
     chunks: tuple[Chunk, ...]
+    entities: tuple[Entity, ...]
     triples: tuple[Triple, ...]
 
     def to_dict(self) -> dict[str, Any]:
@@ -102,4 +119,31 @@ class OperativeClauseResolution:
     contract_id: str
     base_clause_id: str
     operative_clause_id: str
+    path: tuple[GraphStep, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ObligationResolution:
+    obligation_id: str
+    clause_id: str
+    owed_by: str
+    owed_to: str | None
+    triggered_by: str | None
+    policy_ids: tuple[str, ...]
+    path: tuple[GraphStep, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ContractComparison:
+    contract_ids: tuple[str, ...]
+    clause_ids: tuple[str, ...]
+    shared_service_type: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class ProvenanceTrace:
+    clause_id: str
+    document_id: str
+    page_id: str
+    chunk_id: str
     path: tuple[GraphStep, ...]

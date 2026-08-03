@@ -9,10 +9,35 @@ from dataclasses import fields
 from pathlib import Path
 from typing import Any
 
-from contractgraph.models import CorpusArtifact, Triple
+from contractgraph.models import CorpusArtifact, Entity, Triple
 from contractgraph.parser import parse_document
 
 SCHEMA_VERSION = "contractgraph-provenance-v1"
+ACTIVE_ENTITY_TYPES = {
+    "Party",
+    "Obligation",
+    "Event",
+    "Policy",
+    "ProductOrService",
+    "MissingReference",
+}
+ACTIVE_PREDICATES = {
+    "REPRESENTS",
+    "CONTAINS",
+    "HAS_EXHIBIT",
+    "AMENDS",
+    "MODIFIES",
+    "SUPERSEDES",
+    "CREATES_OBLIGATION",
+    "OWED_BY",
+    "OWED_TO",
+    "TRIGGERED_BY",
+    "REFERENCES",
+    "CONFLICTS_WITH",
+    "COVERS",
+    "LOCATED_ON",
+    "EXTRACTED_FROM",
+}
 
 
 class IngestionError(ValueError):
@@ -34,6 +59,8 @@ def _triple(raw: dict[str, Any]) -> Triple:
         )
     if raw["population_method"] not in {"document_structure", "reviewed_assertion"}:
         raise IngestionError(f"Unsupported population method: {raw['population_method']}")
+    if raw["predicate"] not in ACTIVE_PREDICATES:
+        raise IngestionError(f"Predicate is outside the active ontology: {raw['predicate']}")
     return Triple(**raw)
 
 
@@ -42,20 +69,46 @@ def build_corpus(corpus_root: Path) -> CorpusArtifact:
     corpus_version = str(manifest.get("corpus_version", ""))
     document_paths = manifest.get("documents")
     assertion_path = manifest.get("assertions")
-    if not corpus_version or not isinstance(document_paths, list) or not assertion_path:
-        raise IngestionError("Manifest requires corpus_version, documents, and assertions")
+    entity_path = manifest.get("entities")
+    if (
+        not corpus_version
+        or not isinstance(document_paths, list)
+        or not assertion_path
+        or not entity_path
+    ):
+        raise IngestionError(
+            "Manifest requires corpus_version, documents, entities, and assertions"
+        )
 
     parsed = [
         parse_document(corpus_root / relative_path, corpus_root=corpus_root)
         for relative_path in sorted(document_paths)
     ]
     documents = tuple(sorted((item.document for item in parsed), key=lambda item: item.document_id))
-    pages = tuple(sorted((page for item in parsed for page in item.pages), key=lambda item: item.page_id))
+    pages = tuple(
+        sorted(
+            (page for item in parsed for page in item.pages),
+            key=lambda item: item.page_id,
+        )
+    )
     # Canonical document paths and source order make the human-facing hierarchy
     # deterministic without sorting section identifiers lexicographically (where
     # section 12 would otherwise precede section 2).
     clauses = tuple(clause for item in parsed for clause in item.clauses)
     chunks = tuple(chunk for item in parsed for chunk in item.chunks)
+    raw_entities = json.loads((corpus_root / entity_path).read_text(encoding="utf-8"))
+    if not isinstance(raw_entities, list):
+        raise IngestionError("Entity file must contain a JSON list")
+    entities = tuple(
+        sorted((Entity(**raw) for raw in raw_entities), key=lambda item: item.entity_id)
+    )
+    unsupported_entity_types = {
+        entity.entity_type for entity in entities if entity.entity_type not in ACTIVE_ENTITY_TYPES
+    }
+    if unsupported_entity_types:
+        raise IngestionError(
+            f"Entity types are outside the active ontology: {sorted(unsupported_entity_types)}"
+        )
 
     clause_ids = {clause.clause_id for clause in clauses}
     entity_ids = (
@@ -64,6 +117,7 @@ def build_corpus(corpus_root: Path) -> CorpusArtifact:
         | {page.page_id for page in pages}
         | clause_ids
         | {chunk.chunk_id for chunk in chunks}
+        | {entity.entity_id for entity in entities}
     )
     assertions = json.loads((corpus_root / assertion_path).read_text(encoding="utf-8"))
     if not isinstance(assertions, list):
@@ -74,13 +128,15 @@ def build_corpus(corpus_root: Path) -> CorpusArtifact:
             raise IngestionError(f"Unknown triple source clause: {triple.source_clause_id}")
         if triple.subject not in entity_ids or triple.object not in entity_ids:
             raise IngestionError(
-                f"Triple references unknown entity: {triple.subject} {triple.predicate} {triple.object}"
+                "Triple references unknown entity: "
+                f"{triple.subject} {triple.predicate} {triple.object}"
             )
 
     _reject_duplicates(documents, "document_id")
     _reject_duplicates(pages, "page_id")
     _reject_duplicates(clauses, "clause_id")
     _reject_duplicates(chunks, "chunk_id")
+    _reject_duplicates(entities, "entity_id")
     if len(triples) != len(set(triples)):
         raise IngestionError("Duplicate triples are not allowed")
 
@@ -91,6 +147,7 @@ def build_corpus(corpus_root: Path) -> CorpusArtifact:
         pages=pages,
         clauses=clauses,
         chunks=chunks,
+        entities=entities,
         triples=triples,
     )
 

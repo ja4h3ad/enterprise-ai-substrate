@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from contractgraph.models import Clause, Chunk, CorpusArtifact, Document, Page, Triple
+from contractgraph.models import Clause, Chunk, CorpusArtifact, Document, Entity, Page, Triple
 
 
 def load_corpus(artifact_root: Path) -> CorpusArtifact:
@@ -20,5 +20,6 @@ def load_corpus(artifact_root: Path) -> CorpusArtifact:
         pages=tuple(Page(**item) for item in raw["pages"]),
         clauses=tuple(Clause(**item) for item in raw["clauses"]),
         chunks=tuple(Chunk(**item) for item in raw["chunks"]),
+        entities=tuple(Entity(**item) for item in raw.get("entities", ())),
         triples=tuple(Triple(**item) for item in raw["triples"]),
     )

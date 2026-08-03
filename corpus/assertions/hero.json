@@ -57,6 +57,13 @@
   },
   {
     "subject": "CLAUSE-ATLAS-A1-2",
+    "predicate": "CONFLICTS_WITH",
+    "object": "CLAUSE-ATLAS-8.2",
+    "source_clause_id": "CLAUSE-ATLAS-A1-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-A1-2",
     "predicate": "LOCATED_ON",
     "object": "DOC-ATLAS-AMENDMENT-001:PAGE:001",
     "source_clause_id": "CLAUSE-ATLAS-A1-2",
@@ -68,5 +75,411 @@
     "object": "CLAUSE-ATLAS-A1-2:CHUNK:001",
     "source_clause_id": "CLAUSE-ATLAS-A1-2",
     "population_method": "document_structure"
+  },
+  {
+    "subject": "CONTRACT-ATLAS-001",
+    "predicate": "HAS_EXHIBIT",
+    "object": "DOC-ATLAS-EXHIBIT-C",
+    "source_clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-ATLAS-EXHIBIT-C",
+    "predicate": "CONTAINS",
+    "object": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "source_clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CONTRACT-ATLAS-001",
+    "predicate": "COVERS",
+    "object": "SERVICE-ATLAS-NETWORK",
+    "source_clause_id": "CLAUSE-ATLAS-2.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "predicate": "CREATES_OBLIGATION",
+    "object": "OBLIGATION-ATLAS-CYBER-NOTICE",
+    "source_clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-ATLAS-CYBER-NOTICE",
+    "predicate": "OWED_BY",
+    "object": "PARTY-ATLAS",
+    "source_clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-ATLAS-CYBER-NOTICE",
+    "predicate": "OWED_TO",
+    "object": "PARTY-NORTHSTAR",
+    "source_clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-ATLAS-CYBER-NOTICE",
+    "predicate": "TRIGGERED_BY",
+    "object": "EVENT-SECURITY",
+    "source_clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.5",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "predicate": "REFERENCES",
+    "object": "POLICY-ORION-SECURITY",
+    "source_clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.10",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "predicate": "LOCATED_ON",
+    "object": "DOC-ATLAS-EXHIBIT-C:PAGE:002",
+    "source_clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "predicate": "EXTRACTED_FROM",
+    "object": "CLAUSE-ATLAS-EXHIBIT-C-C.6:CHUNK:001",
+    "source_clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "DOC-BOREALIS-CHA-2025",
+    "predicate": "REPRESENTS",
+    "object": "CONTRACT-BOREALIS-001",
+    "source_clause_id": "CLAUSE-BOREALIS-CHA-2025-1.1",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CONTRACT-BOREALIS-001",
+    "predicate": "COVERS",
+    "object": "SERVICE-BOREALIS-CLOUD",
+    "source_clause_id": "CLAUSE-BOREALIS-CHA-2025-2.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-BOREALIS-CHA-2025",
+    "predicate": "CONTAINS",
+    "object": "CLAUSE-BOREALIS-CHA-2025-4.2",
+    "source_clause_id": "CLAUSE-BOREALIS-CHA-2025-4.2",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "DOC-BOREALIS-AMENDMENT-001",
+    "predicate": "AMENDS",
+    "object": "CONTRACT-BOREALIS-001",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-BOREALIS-AMENDMENT-001",
+    "predicate": "CONTAINS",
+    "object": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "predicate": "MODIFIES",
+    "object": "CLAUSE-BOREALIS-CHA-2025-4.2",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "predicate": "SUPERSEDES",
+    "object": "CLAUSE-BOREALIS-CHA-2025-4.2",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "predicate": "CONFLICTS_WITH",
+    "object": "CLAUSE-BOREALIS-CHA-2025-4.2",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "predicate": "CREATES_OBLIGATION",
+    "object": "OBLIGATION-BOREALIS-CYBER-NOTICE",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-BOREALIS-CYBER-NOTICE",
+    "predicate": "OWED_BY",
+    "object": "PARTY-BOREALIS",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-BOREALIS-CYBER-NOTICE",
+    "predicate": "OWED_TO",
+    "object": "PARTY-NORTHSTAR",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-BOREALIS-CYBER-NOTICE",
+    "predicate": "TRIGGERED_BY",
+    "object": "EVENT-SECURITY",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-BOREALIS-AMENDMENT-001-2",
+    "predicate": "REFERENCES",
+    "object": "POLICY-ORION-SECURITY",
+    "source_clause_id": "CLAUSE-BOREALIS-AMENDMENT-001-3",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-CEDAR-ESA-2025",
+    "predicate": "REPRESENTS",
+    "object": "CONTRACT-CEDAR-001",
+    "source_clause_id": "CLAUSE-CEDAR-ESA-2025-1.1",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CONTRACT-CEDAR-001",
+    "predicate": "COVERS",
+    "object": "SERVICE-CEDAR-ENDPOINT",
+    "source_clause_id": "CLAUSE-CEDAR-ESA-2025-2.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-CEDAR-AMENDMENT-001",
+    "predicate": "AMENDS",
+    "object": "CONTRACT-CEDAR-001",
+    "source_clause_id": "CLAUSE-CEDAR-AMENDMENT-001-1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-CEDAR-AMENDMENT-001",
+    "predicate": "CONTAINS",
+    "object": "CLAUSE-CEDAR-AMENDMENT-001-2",
+    "source_clause_id": "CLAUSE-CEDAR-AMENDMENT-001-2",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CLAUSE-CEDAR-AMENDMENT-001-2",
+    "predicate": "SUPERSEDES",
+    "object": "CLAUSE-CEDAR-ESA-2025-8.1",
+    "source_clause_id": "CLAUSE-CEDAR-AMENDMENT-001-2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-CEDAR-ESA-2025-4.1",
+    "predicate": "CREATES_OBLIGATION",
+    "object": "OBLIGATION-CEDAR-CYBER-NOTICE",
+    "source_clause_id": "CLAUSE-CEDAR-ESA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-CEDAR-CYBER-NOTICE",
+    "predicate": "OWED_BY",
+    "object": "PARTY-CEDAR",
+    "source_clause_id": "CLAUSE-CEDAR-ESA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-CEDAR-CYBER-NOTICE",
+    "predicate": "OWED_TO",
+    "object": "PARTY-NORTHSTAR",
+    "source_clause_id": "CLAUSE-CEDAR-ESA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-CEDAR-CYBER-NOTICE",
+    "predicate": "TRIGGERED_BY",
+    "object": "EVENT-SECURITY",
+    "source_clause_id": "CLAUSE-CEDAR-ESA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-CEDAR-ESA-2025-4.1",
+    "predicate": "REFERENCES",
+    "object": "POLICY-ORION-SECURITY",
+    "source_clause_id": "CLAUSE-CEDAR-ESA-2025-4.2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-DELTA-DPA-2025",
+    "predicate": "REPRESENTS",
+    "object": "CONTRACT-DELTA-001",
+    "source_clause_id": "CLAUSE-DELTA-DPA-2025-1.1",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CONTRACT-DELTA-001",
+    "predicate": "COVERS",
+    "object": "SERVICE-DELTA-DATA",
+    "source_clause_id": "CLAUSE-DELTA-DPA-2025-2.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CONTRACT-DELTA-001",
+    "predicate": "HAS_EXHIBIT",
+    "object": "DOC-DELTA-EXHIBIT-D",
+    "source_clause_id": "CLAUSE-DELTA-EXHIBIT-D-D.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-DELTA-EXHIBIT-D",
+    "predicate": "CONTAINS",
+    "object": "CLAUSE-DELTA-EXHIBIT-D-D.7",
+    "source_clause_id": "CLAUSE-DELTA-EXHIBIT-D-D.7",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CLAUSE-DELTA-DPA-2025-4.1",
+    "predicate": "CREATES_OBLIGATION",
+    "object": "OBLIGATION-DELTA-CYBER-NOTICE",
+    "source_clause_id": "CLAUSE-DELTA-DPA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-DELTA-CYBER-NOTICE",
+    "predicate": "OWED_BY",
+    "object": "PARTY-DELTA",
+    "source_clause_id": "CLAUSE-DELTA-DPA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-DELTA-CYBER-NOTICE",
+    "predicate": "OWED_TO",
+    "object": "PARTY-NORTHSTAR",
+    "source_clause_id": "CLAUSE-DELTA-DPA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-DELTA-CYBER-NOTICE",
+    "predicate": "TRIGGERED_BY",
+    "object": "EVENT-SECURITY",
+    "source_clause_id": "CLAUSE-DELTA-DPA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-DELTA-EXHIBIT-D-D.7",
+    "predicate": "CREATES_OBLIGATION",
+    "object": "OBLIGATION-DELTA-SEV1-UPDATE",
+    "source_clause_id": "CLAUSE-DELTA-EXHIBIT-D-D.7",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-DELTA-SEV1-UPDATE",
+    "predicate": "OWED_BY",
+    "object": "PARTY-DELTA",
+    "source_clause_id": "CLAUSE-DELTA-EXHIBIT-D-D.7",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-DELTA-SEV1-UPDATE",
+    "predicate": "OWED_TO",
+    "object": "PARTY-NORTHSTAR",
+    "source_clause_id": "CLAUSE-DELTA-EXHIBIT-D-D.7",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-DELTA-SEV1-UPDATE",
+    "predicate": "TRIGGERED_BY",
+    "object": "EVENT-SEVERITY-ONE",
+    "source_clause_id": "CLAUSE-DELTA-EXHIBIT-D-D.4",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-EMBER-SDA-2025",
+    "predicate": "REPRESENTS",
+    "object": "CONTRACT-EMBER-001",
+    "source_clause_id": "CLAUSE-EMBER-SDA-2025-1.1",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CONTRACT-EMBER-001",
+    "predicate": "COVERS",
+    "object": "SERVICE-EMBER-DESK",
+    "source_clause_id": "CLAUSE-EMBER-SDA-2025-2.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-EMBER-SDA-2025-3.2",
+    "predicate": "CREATES_OBLIGATION",
+    "object": "OBLIGATION-EMBER-ESCALATE",
+    "source_clause_id": "CLAUSE-EMBER-SDA-2025-3.2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-EMBER-ESCALATE",
+    "predicate": "OWED_BY",
+    "object": "PARTY-EMBER",
+    "source_clause_id": "CLAUSE-EMBER-SDA-2025-3.2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-EMBER-ESCALATE",
+    "predicate": "OWED_TO",
+    "object": "PARTY-NORTHSTAR",
+    "source_clause_id": "CLAUSE-EMBER-SDA-2025-3.2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-EMBER-ESCALATE",
+    "predicate": "TRIGGERED_BY",
+    "object": "EVENT-SEVERITY-ONE",
+    "source_clause_id": "CLAUSE-EMBER-SDA-2025-3.2",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "DOC-FJORD-SLA-2025",
+    "predicate": "REPRESENTS",
+    "object": "CONTRACT-FJORD-001",
+    "source_clause_id": "CLAUSE-FJORD-SLA-2025-1.1",
+    "population_method": "document_structure"
+  },
+  {
+    "subject": "CONTRACT-FJORD-001",
+    "predicate": "COVERS",
+    "object": "SERVICE-FJORD-SOFTWARE",
+    "source_clause_id": "CLAUSE-FJORD-SLA-2025-2.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-FJORD-SLA-2025-4.1",
+    "predicate": "CREATES_OBLIGATION",
+    "object": "OBLIGATION-FJORD-VULNERABILITY",
+    "source_clause_id": "CLAUSE-FJORD-SLA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-FJORD-VULNERABILITY",
+    "predicate": "OWED_BY",
+    "object": "PARTY-FJORD",
+    "source_clause_id": "CLAUSE-FJORD-SLA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-FJORD-VULNERABILITY",
+    "predicate": "OWED_TO",
+    "object": "PARTY-NORTHSTAR",
+    "source_clause_id": "CLAUSE-FJORD-SLA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "OBLIGATION-FJORD-VULNERABILITY",
+    "predicate": "TRIGGERED_BY",
+    "object": "EVENT-SECURITY",
+    "source_clause_id": "CLAUSE-FJORD-SLA-2025-4.1",
+    "population_method": "reviewed_assertion"
+  },
+  {
+    "subject": "CLAUSE-FJORD-SLA-2025-3.1",
+    "predicate": "REFERENCES",
+    "object": "MISSING-SCHEDULE-Z",
+    "source_clause_id": "CLAUSE-FJORD-SLA-2025-3.1",
+    "population_method": "reviewed_assertion"
   }
 ]

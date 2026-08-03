@@ -19,6 +19,7 @@ def render_artifact(artifact_root: Path) -> str:
         f"Pages: {len(artifact['pages'])}",
         f"Clauses: {len(artifact['clauses'])}",
         f"Chunks: {len(artifact['chunks'])}",
+        f"Semantic entities: {len(artifact.get('entities', []))}",
         f"Triples: {len(artifact['triples'])}",
         "",
         "Document hierarchy",

@@ -21,6 +21,10 @@ The comparison command makes the first retrieval thesis visible: an exact local 
 
 The agent command runs the same hero question through an explicit replay-backed LangGraph state machine. Lexical, vector, and graph retrieval execute in one fan-out super-step; Reciprocal Rank Fusion, a deterministic amendment evidence contract, structured synthesis, and citation verification follow. LangGraph checkpoints and domain trace events are persisted in SQLite beneath `.contractgraph/`, and no OpenAI key is required.
 
+The public synthetic corpus now contains exactly six base contracts, three amendments, two exhibits, and 100 clause-level citation units. It exercises operative amendments, exhibit obligations, semantically equivalent supplier duties, triggered obligations, policy references, cross-contract comparisons, explicit conflicts, and a referenced but absent schedule. All organizations and terms are fictional; answers are contract-evidence demonstrations, not legal advice.
+
+`ContractIntelligenceService` is the application seam for the competency-driven local stack. It exposes bounded typed traversals and hybrid retrieval without an API key. The neural configuration pins an embedding model and cross-encoder revision, loads weights only from the external ContractGraph cache, fuses lexical/vector/graph ranks deterministically with RRF, and reranks only the top eight candidates. When model weights are unavailable, structured degradation reasons show the deterministic semantic fallback and unchanged RRF order. See [the domain context](CONTEXT.md) and [ADR 0001](docs/adr/0001-local-retrieval-models.md).
+
 ## Enterprise AI Substrate
 
 ## Architectural thesis

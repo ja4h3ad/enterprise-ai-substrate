@@ -63,7 +63,7 @@ def parse_document(path: Path, *, corpus_root: Path) -> ParsedDocument:
         context="document",
     )
     document_type = metadata["document_type"]
-    if document_type not in {"Contract", "Amendment"}:
+    if document_type not in {"Contract", "Amendment", "Exhibit"}:
         raise DocumentFormatError(f"Unsupported document_type: {document_type}")
 
     document = Document(

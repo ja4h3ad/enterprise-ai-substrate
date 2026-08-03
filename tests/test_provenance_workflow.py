@@ -58,7 +58,13 @@ def test_public_ingestion_is_deterministic_and_inspectable(tmp_path: Path) -> No
     assert {document["document_type"] for document in artifact["documents"]} == {
         "Contract",
         "Amendment",
+        "Exhibit",
     }
+    assert len(artifact["documents"]) == 11
+    assert len(artifact["clauses"]) == 100
+    assert sum(item["document_type"] == "Contract" for item in artifact["documents"]) == 6
+    assert sum(item["document_type"] == "Amendment" for item in artifact["documents"]) == 3
+    assert sum(item["document_type"] == "Exhibit" for item in artifact["documents"]) == 2
     assert {triple["population_method"] for triple in artifact["triples"]} == {
         "document_structure",
         "reviewed_assertion",
@@ -103,9 +109,8 @@ def test_lexical_retrieval_preserves_exact_contract_language() -> None:
     assert retriever.search("Atlas Network Services", limit=1)[0].clause_id == (
         "CLAUSE-ATLAS-A1-1"
     )
-    assert retriever.search("Managed Network Services Agreement", limit=1)[0].clause_id == (
-        "CLAUSE-ATLAS-1.1"
-    )
+    result = retriever.search("entered into Northstar Customer Atlas Supplier", limit=1)
+    assert result[0].clause_id == "CLAUSE-ATLAS-1.1"
     assert retriever.search("Termination for Convenience", limit=1)[0].clause_id == (
         "CLAUSE-ATLAS-8.2"
     )
