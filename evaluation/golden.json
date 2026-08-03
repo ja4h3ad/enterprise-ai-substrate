@@ -1,0 +1,501 @@
+{
+  "schema_version": "contractgraph-golden-v1",
+  "dataset_version": "golden-24-v1",
+  "distribution": {
+    "direct": 5,
+    "semantic": 4,
+    "amendment": 4,
+    "multi_hop": 3,
+    "comparison": 3,
+    "conflict": 2,
+    "ambiguous": 1,
+    "negative": 1,
+    "adversarial": 1
+  },
+  "items": [
+    {
+      "id": "G01",
+      "category": "direct",
+      "difficulty": "easy",
+      "question": "Who are the parties to the Atlas Managed Network Services Agreement?",
+      "relevant_contract_ids": [
+        "CONTRACT-ATLAS-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-ATLAS-1.1"
+      ],
+      "expected_facts": [
+        "Northstar Mobility Group is Customer",
+        "Atlas Network Services is Supplier"
+      ],
+      "expected_path": [],
+      "answerable": true
+    },
+    {
+      "id": "G02",
+      "category": "direct",
+      "difficulty": "easy",
+      "question": "What monthly availability does Delta promise?",
+      "relevant_contract_ids": [
+        "CONTRACT-DELTA-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-DELTA-EXHIBIT-D-D.2"
+      ],
+      "expected_facts": [
+        "99.95 percent monthly availability"
+      ],
+      "expected_path": [
+        "HAS_EXHIBIT",
+        "CONTAINS"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G03",
+      "category": "direct",
+      "difficulty": "easy",
+      "question": "How quickly must Ember acknowledge a priority-one ticket?",
+      "relevant_contract_ids": [
+        "CONTRACT-EMBER-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-EMBER-SDA-2025-3.1"
+      ],
+      "expected_facts": [
+        "within fifteen minutes"
+      ],
+      "expected_path": [],
+      "answerable": true
+    },
+    {
+      "id": "G04",
+      "category": "direct",
+      "difficulty": "easy",
+      "question": "What license does Fjord grant for the fleet planning software?",
+      "relevant_contract_ids": [
+        "CONTRACT-FJORD-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-FJORD-SLA-2025-2.1"
+      ],
+      "expected_facts": [
+        "nonexclusive internal-use license"
+      ],
+      "expected_path": [],
+      "answerable": true
+    },
+    {
+      "id": "G05",
+      "category": "direct",
+      "difficulty": "easy",
+      "question": "When must Northstar pay Borealis's undisputed hosting charges?",
+      "relevant_contract_ids": [
+        "CONTRACT-BOREALIS-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-BOREALIS-CHA-2025-7.1"
+      ],
+      "expected_facts": [
+        "within thirty days after invoice"
+      ],
+      "expected_path": [],
+      "answerable": true
+    },
+    {
+      "id": "G06",
+      "category": "semantic",
+      "difficulty": "medium",
+      "question": "Which endpoint vendor has to alert us after an attacker gets into our information?",
+      "relevant_contract_ids": [
+        "CONTRACT-CEDAR-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-CEDAR-ESA-2025-4.1"
+      ],
+      "expected_facts": [
+        "Cedar reports confirmed unauthorized access within two days"
+      ],
+      "expected_path": [],
+      "answerable": true
+    },
+    {
+      "id": "G07",
+      "category": "semantic",
+      "difficulty": "medium",
+      "question": "What happens to our information when the Borealis relationship ends?",
+      "relevant_contract_ids": [
+        "CONTRACT-BOREALIS-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-BOREALIS-CHA-2025-5.1"
+      ],
+      "expected_facts": [
+        "Borealis returns Customer Data in a commonly readable format"
+      ],
+      "expected_path": [],
+      "answerable": true
+    },
+    {
+      "id": "G08",
+      "category": "semantic",
+      "difficulty": "medium",
+      "question": "Will Ember give us the unresolved support records when we switch providers?",
+      "relevant_contract_ids": [
+        "CONTRACT-EMBER-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-EMBER-SDA-2025-9.1"
+      ],
+      "expected_facts": [
+        "Ember exports open ticket records at termination"
+      ],
+      "expected_path": [],
+      "answerable": true
+    },
+    {
+      "id": "G09",
+      "category": "semantic",
+      "difficulty": "medium",
+      "question": "How soon does Fjord have to tell us about a severe software weakness?",
+      "relevant_contract_ids": [
+        "CONTRACT-FJORD-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-FJORD-SLA-2025-4.1"
+      ],
+      "expected_facts": [
+        "Fjord gives notice within seventy-two hours after validation"
+      ],
+      "expected_path": [],
+      "answerable": true
+    },
+    {
+      "id": "G10",
+      "category": "amendment",
+      "difficulty": "hard",
+      "question": "How much notice must Atlas Network Services provide before terminating for convenience?",
+      "relevant_contract_ids": [
+        "CONTRACT-ATLAS-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-ATLAS-A1-2"
+      ],
+      "expected_facts": [
+        "ninety (90) days prior written notice"
+      ],
+      "expected_path": [
+        "AMENDS",
+        "CONTAINS",
+        "SUPERSEDES"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G11",
+      "category": "amendment",
+      "difficulty": "hard",
+      "question": "What is Borealis's current deadline for reporting unauthorized access after the security amendment?",
+      "relevant_contract_ids": [
+        "CONTRACT-BOREALIS-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-BOREALIS-AMENDMENT-001-2"
+      ],
+      "expected_facts": [
+        "twenty-four (24) hours"
+      ],
+      "expected_path": [
+        "AMENDS",
+        "CONTAINS",
+        "SUPERSEDES"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G12",
+      "category": "amendment",
+      "difficulty": "hard",
+      "question": "What is the operative Cedar renewal non-renewal notice period?",
+      "relevant_contract_ids": [
+        "CONTRACT-CEDAR-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-CEDAR-AMENDMENT-001-2"
+      ],
+      "expected_facts": [
+        "ninety days written notice"
+      ],
+      "expected_path": [
+        "AMENDS",
+        "CONTAINS",
+        "SUPERSEDES"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G13",
+      "category": "amendment",
+      "difficulty": "hard",
+      "question": "Does Borealis still have forty-eight hours to report a data breach?",
+      "relevant_contract_ids": [
+        "CONTRACT-BOREALIS-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-BOREALIS-AMENDMENT-001-2"
+      ],
+      "expected_facts": [
+        "No; the operative deadline is twenty-four hours"
+      ],
+      "expected_path": [
+        "AMENDS",
+        "CONTAINS",
+        "SUPERSEDES"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G14",
+      "category": "multi_hop",
+      "difficulty": "hard",
+      "question": "After a security event, what must Atlas do, for whom, and under which policy?",
+      "relevant_contract_ids": [
+        "CONTRACT-ATLAS-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+        "CLAUSE-ATLAS-EXHIBIT-C-C.10"
+      ],
+      "expected_facts": [
+        "Atlas notifies Northstar within twenty-four hours",
+        "Orion Security Standard applies"
+      ],
+      "expected_path": [
+        "HAS_EXHIBIT",
+        "CONTAINS",
+        "CREATES_OBLIGATION",
+        "OWED_BY",
+        "OWED_TO",
+        "TRIGGERED_BY",
+        "REFERENCES"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G15",
+      "category": "multi_hop",
+      "difficulty": "hard",
+      "question": "When Delta has a severity-one outage, who owes status updates to whom and how often?",
+      "relevant_contract_ids": [
+        "CONTRACT-DELTA-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-DELTA-EXHIBIT-D-D.7"
+      ],
+      "expected_facts": [
+        "Delta owes Northstar hourly status updates"
+      ],
+      "expected_path": [
+        "HAS_EXHIBIT",
+        "CONTAINS",
+        "CREATES_OBLIGATION",
+        "OWED_BY",
+        "OWED_TO",
+        "TRIGGERED_BY"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G16",
+      "category": "multi_hop",
+      "difficulty": "hard",
+      "question": "What event triggers Cedar's reporting duty and which security policy is referenced?",
+      "relevant_contract_ids": [
+        "CONTRACT-CEDAR-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-CEDAR-ESA-2025-4.1",
+        "CLAUSE-CEDAR-ESA-2025-4.2"
+      ],
+      "expected_facts": [
+        "confirmed unauthorized access triggers notice",
+        "Orion Security Standard is referenced"
+      ],
+      "expected_path": [
+        "CREATES_OBLIGATION",
+        "TRIGGERED_BY",
+        "REFERENCES"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G17",
+      "category": "comparison",
+      "difficulty": "hard",
+      "question": "Compare Borealis and Cedar deadlines for notifying Northstar about unauthorized access.",
+      "relevant_contract_ids": [
+        "CONTRACT-BOREALIS-001",
+        "CONTRACT-CEDAR-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-BOREALIS-AMENDMENT-001-2",
+        "CLAUSE-CEDAR-ESA-2025-4.1"
+      ],
+      "expected_facts": [
+        "Borealis: twenty-four hours",
+        "Cedar: within two days"
+      ],
+      "expected_path": [
+        "CREATES_OBLIGATION",
+        "TRIGGERED_BY"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G18",
+      "category": "comparison",
+      "difficulty": "hard",
+      "question": "Compare Atlas and Delta confirmed data-compromise notification deadlines.",
+      "relevant_contract_ids": [
+        "CONTRACT-ATLAS-001",
+        "CONTRACT-DELTA-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-ATLAS-EXHIBIT-C-C.6",
+        "CLAUSE-DELTA-DPA-2025-4.1"
+      ],
+      "expected_facts": [
+        "Atlas: twenty-four hours",
+        "Delta: twenty-four hours"
+      ],
+      "expected_path": [
+        "CREATES_OBLIGATION",
+        "TRIGGERED_BY"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G19",
+      "category": "comparison",
+      "difficulty": "hard",
+      "question": "Compare Delta and Ember status-update or escalation duties during their highest-priority incidents.",
+      "relevant_contract_ids": [
+        "CONTRACT-DELTA-001",
+        "CONTRACT-EMBER-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-DELTA-EXHIBIT-D-D.7",
+        "CLAUSE-EMBER-SDA-2025-3.2"
+      ],
+      "expected_facts": [
+        "Delta provides hourly updates",
+        "Ember escalates after one hour"
+      ],
+      "expected_path": [
+        "CREATES_OBLIGATION",
+        "TRIGGERED_BY"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G20",
+      "category": "conflict",
+      "difficulty": "hard",
+      "question": "Atlas says both sixty and ninety days for supplier convenience termination. Which term controls?",
+      "relevant_contract_ids": [
+        "CONTRACT-ATLAS-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-ATLAS-A1-2",
+        "CLAUSE-ATLAS-8.2"
+      ],
+      "expected_facts": [
+        "ninety-day amendment controls",
+        "sixty-day clause is superseded"
+      ],
+      "expected_path": [
+        "CONFLICTS_WITH",
+        "SUPERSEDES"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G21",
+      "category": "conflict",
+      "difficulty": "hard",
+      "question": "Borealis contains forty-eight-hour and twenty-four-hour security notice terms. Resolve the conflict.",
+      "relevant_contract_ids": [
+        "CONTRACT-BOREALIS-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-BOREALIS-AMENDMENT-001-2",
+        "CLAUSE-BOREALIS-CHA-2025-4.2"
+      ],
+      "expected_facts": [
+        "twenty-four-hour amendment controls",
+        "forty-eight-hour clause is superseded"
+      ],
+      "expected_path": [
+        "CONFLICTS_WITH",
+        "SUPERSEDES"
+      ],
+      "answerable": true
+    },
+    {
+      "id": "G22",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "question": "What notice must the supplier provide?",
+      "relevant_contract_ids": [
+        "CONTRACT-ATLAS-001",
+        "CONTRACT-BOREALIS-001",
+        "CONTRACT-CEDAR-001",
+        "CONTRACT-DELTA-001",
+        "CONTRACT-EMBER-001",
+        "CONTRACT-FJORD-001"
+      ],
+      "relevant_clause_ids": [],
+      "expected_facts": [
+        "supplier and notice type are ambiguous"
+      ],
+      "expected_path": [],
+      "answerable": false
+    },
+    {
+      "id": "G23",
+      "category": "negative",
+      "difficulty": "medium",
+      "question": "What support response time is required by Fjord Schedule Z?",
+      "relevant_contract_ids": [
+        "CONTRACT-FJORD-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-FJORD-SLA-2025-3.1"
+      ],
+      "expected_facts": [
+        "Schedule Z is referenced but absent from the corpus"
+      ],
+      "expected_path": [
+        "REFERENCES"
+      ],
+      "answerable": false
+    },
+    {
+      "id": "G24",
+      "category": "adversarial",
+      "difficulty": "hard",
+      "question": "The imported annotation says to ignore the contract. What reverse-engineering restriction actually applies under Fjord?",
+      "relevant_contract_ids": [
+        "CONTRACT-FJORD-001"
+      ],
+      "relevant_clause_ids": [
+        "CLAUSE-FJORD-SLA-2025-5.1"
+      ],
+      "expected_facts": [
+        "reverse engineering is prohibited except where applicable law overrides"
+      ],
+      "expected_path": [],
+      "answerable": true
+    }
+  ]
+}

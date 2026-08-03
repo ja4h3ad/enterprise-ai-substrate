@@ -12,6 +12,7 @@ uv run contractgraph ingest
 uv run contractgraph inspect
 uv run contractgraph compare
 uv run contractgraph run
+uv run contractgraph evaluate
 uv run pytest
 ```
 
@@ -24,6 +25,8 @@ The agent command runs the same hero question through an explicit replay-backed 
 The public synthetic corpus now contains exactly six base contracts, three amendments, two exhibits, and 100 clause-level citation units. It exercises operative amendments, exhibit obligations, semantically equivalent supplier duties, triggered obligations, policy references, cross-contract comparisons, explicit conflicts, and a referenced but absent schedule. All organizations and terms are fictional; answers are contract-evidence demonstrations, not legal advice.
 
 `ContractIntelligenceService` is the application seam for the competency-driven local stack. It exposes bounded typed traversals and hybrid retrieval without an API key. The neural configuration pins an embedding model and cross-encoder revision, loads weights only from the external ContractGraph cache, fuses lexical/vector/graph ranks deterministically with RRF, and reranks only the top eight candidates. When model weights are unavailable, structured degradation reasons show the deterministic semantic fallback and unchanged RRF order. See [the domain context](CONTEXT.md) and [ADR 0001](docs/adr/0001-local-retrieval-models.md).
+
+`uv run contractgraph evaluate` is the primary behavioral quality gate. It validates the preregistered 24-question distribution, runs all five ablation variants without an API key, and deterministically regenerates `reports/ablation.md` and `reports/ablation.json`. Scores use structured labels and rules—not an LLM judge—and always include raw numerators and denominators. The report is evidence from a small synthetic corpus, not a claim of statistical significance.
 
 ## Enterprise AI Substrate
 
