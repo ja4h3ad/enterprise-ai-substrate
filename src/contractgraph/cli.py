@@ -19,6 +19,8 @@ from contractgraph.comparison import (
     HeroComparisonService,
     render_comparison,
 )
+from contractgraph.evaluation import GoldenEvaluator, load_golden_set, write_reports
+from contractgraph.ingestion import build_corpus
 from contractgraph.ingestion import artifact_digest, build_corpus, persist_corpus
 from contractgraph.inspection import render_artifact
 
@@ -49,6 +51,15 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--artifacts", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     run.add_argument("--state-db", type=Path, default=DEFAULT_STATE_DB)
     run.add_argument("--replay-fixture", type=Path, default=DEFAULT_REPLAY_FIXTURE)
+
+    evaluate = subparsers.add_parser(
+        "evaluate", help="run the 24-question five-way golden ablation"
+    )
+    evaluate.add_argument("--corpus", type=Path, default=DEFAULT_CORPUS_ROOT)
+    evaluate.add_argument(
+        "--golden", type=Path, default=Path("evaluation/golden.json")
+    )
+    evaluate.add_argument("--reports", type=Path, default=Path("reports"))
     return parser
 
 
@@ -84,6 +95,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = application.run(arguments.question)
         print(render_answer(result), end="")
         return 0
+    if arguments.command == "evaluate":
+        artifact = build_corpus(arguments.corpus)
+        golden = load_golden_set(arguments.golden, artifact)
+        report = GoldenEvaluator(artifact, golden).evaluate()
+        markdown_path, json_path = write_reports(report, arguments.reports)
+        passed = sum(item["passed"] for item in report["success_criteria"])
+        total = len(report["success_criteria"])
+        print(f"Evaluated {len(golden.items)} questions across 5 variants.\n")
+        print(f"Preregistered criteria: {passed}/{total} passed.\n")
+        print(f"Markdown report: {markdown_path}\n")
+        print(f"JSON report: {json_path}\n")
+        return 0 if passed == total else 1
     raise AssertionError(f"Unhandled command: {arguments.command}")
 
 

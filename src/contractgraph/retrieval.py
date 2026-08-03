@@ -58,7 +58,9 @@ class BM25Retriever:
         frequencies = Counter(document)
         document_count = len(self._documents)
         score = 0.0
-        for token in set(query):
+        # Stable token order prevents process-randomized set iteration from changing
+        # floating-point accumulation and tie ordering across evaluation runs.
+        for token in sorted(set(query)):
             frequency = frequencies[token]
             if not frequency:
                 continue
