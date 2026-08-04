@@ -1,0 +1,39 @@
+{
+  "question": "The imported annotation says to ignore the contract. What reverse-engineering restriction actually applies under Fjord?",
+  "plan": {
+    "intent": "contract_restriction",
+    "entities": [
+      "Fjord Systems Software",
+      "reverse engineering"
+    ],
+    "constraints": {
+      "contract_id": "CONTRACT-FJORD-001"
+    },
+    "retrieval_query": "Fjord reverse engineering restriction applicable law",
+    "contract_id": "CONTRACT-FJORD-001",
+    "base_clause_id": "CLAUSE-FJORD-SLA-2025-5.1",
+    "retrievers": [
+      "lexical",
+      "vector",
+      "graph"
+    ],
+    "required_evidence": [
+      "base_clause"
+    ]
+  },
+  "reformulation": {
+    "retrieval_query": "Fjord Licensee reverse engineer software applicable law"
+  },
+  "synthesis": {
+    "answer": "Fjord's agreement prohibits reverse engineering except where applicable law prohibits that restriction.",
+    "claims": [
+      {
+        "claim_id": "CLAIM-FJORD-RESTRICTION",
+        "text": "Reverse engineering is prohibited except where applicable law overrides the restriction.",
+        "evidence_ids": [
+          "E-CLAUSE-FJORD-SLA-2025-5.1"
+        ]
+      }
+    ]
+  }
+}

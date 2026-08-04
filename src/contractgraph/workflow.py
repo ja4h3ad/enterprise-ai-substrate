@@ -3,17 +3,23 @@
 from __future__ import annotations
 
 import operator
+import time
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
+from collections.abc import Callable
 from typing import Annotated, Literal, TypedDict
 
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
 
 from contractgraph.application_models import (
+    AmendmentResolutionRequest,
     Citation,
     Claim,
     Evidence,
     FusedCandidate,
+    FaultInjection,
+    GroundingEnvelope,
     ProviderCall,
     RetrievalPlan,
     RunLimits,
@@ -22,13 +28,17 @@ from contractgraph.application_models import (
 from contractgraph.graph import ContractGraph
 from contractgraph.models import Clause, CorpusArtifact, GraphStep, SearchResult
 from contractgraph.providers import ModelProvider
+from contractgraph.reranking import LocalCrossEncoderReranker
 from contractgraph.retrieval import BM25Retriever, ExactVectorRetriever
+from contractgraph.telemetry import TelemetryRecorder, content_hash
 
 
 class RetrievalState(TypedDict):
     run_id: str
     question: str
     limits: RunLimits
+    faults: FaultInjection
+    capture_content: bool
     plan: RetrievalPlan | None
     retrieval_query: str
     lexical_results: tuple[SearchResult, ...]
@@ -36,6 +46,7 @@ class RetrievalState(TypedDict):
     graph_results: tuple[SearchResult, ...]
     graph_paths: tuple[GraphStep, ...]
     fused_candidates: tuple[FusedCandidate, ...]
+    reranked_results: tuple[SearchResult, ...]
     selected_evidence: tuple[Evidence, ...]
     evidence_requirements: dict[str, bool]
     evidence_sufficient: bool
@@ -48,7 +59,7 @@ class RetrievalState(TypedDict):
     citations_valid: bool
     answer: str | None
     status: str
-    degraded_components: tuple[str, ...]
+    degraded_components: Annotated[tuple[str, ...], operator.add]
     errors: Annotated[tuple[str, ...], operator.add]
     trace_events: Annotated[tuple[TraceEvent, ...], operator.add]
 
@@ -58,11 +69,13 @@ def build_workflow(
     provider: ModelProvider,
     *,
     checkpointer: BaseCheckpointSaver,
+    telemetry: TelemetryRecorder | None = None,
 ):
     clauses = {clause.clause_id: clause for clause in artifact.clauses}
     lexical = BM25Retriever(artifact.clauses)
     vector = ExactVectorRetriever(artifact.clauses)
     graph_retriever = ContractGraph(artifact)
+    reranker = LocalCrossEncoderReranker(None, top_n=10)
 
     def analyze_and_plan(state: RetrievalState) -> dict[str, object]:
         plan, provider_call = provider.analyze_and_plan(state["question"])
@@ -98,10 +111,42 @@ def build_workflow(
         }
 
     def vector_retrieve(state: RetrievalState) -> dict[str, object]:
-        results = vector.search(
-            state["retrieval_query"],
-            limit=state["limits"].max_candidates_per_retriever,
-        )
+        timeout_ms = state["limits"].local_retriever_timeout_ms
+        if state["faults"].vector_timeout:
+            executor = ThreadPoolExecutor(max_workers=1)
+            future = executor.submit(
+                _delayed_vector_search,
+                vector,
+                state["retrieval_query"],
+                state["limits"].max_candidates_per_retriever,
+                timeout_ms,
+            )
+            try:
+                results = future.result(timeout=timeout_ms / 1000)
+            except FutureTimeoutError:
+                future.cancel()
+                executor.shutdown(wait=True, cancel_futures=True)
+                return {
+                    "vector_results": (),
+                    "degraded_components": ("vector_retrieval_timeout",),
+                    "trace_events": (
+                        _event(
+                            "vector_retrieve",
+                            "retrieval_timeout",
+                            state["iteration"],
+                            timeout_ms=timeout_ms,
+                            fault_injected=True,
+                            continued=True,
+                        ),
+                    ),
+                }
+            else:
+                executor.shutdown(wait=True)
+        else:
+            results = vector.search(
+                state["retrieval_query"],
+                limit=state["limits"].max_candidates_per_retriever,
+            )
         return {
             "vector_results": results,
             "trace_events": (
@@ -111,11 +156,17 @@ def build_workflow(
 
     def graph_retrieve(state: RetrievalState) -> dict[str, object]:
         plan = _require_plan(state)
-        resolution = graph_retriever.resolve_operative_clause(
+        request = AmendmentResolutionRequest(
             contract_id=plan.contract_id,
             base_clause_id=plan.base_clause_id,
             max_depth=state["limits"].max_graph_depth,
             max_candidates=state["limits"].max_candidates_per_retriever,
+        )
+        resolution = graph_retriever.resolve_operative_clause(
+            contract_id=request.contract_id,
+            base_clause_id=request.base_clause_id,
+            max_depth=request.max_depth,
+            max_candidates=request.max_candidates,
         )
         operative = clauses[resolution.operative_clause_id]
         result = _graph_result(operative)
@@ -169,6 +220,36 @@ def build_workflow(
             ),
         }
 
+    def rerank_candidates(state: RetrievalState) -> dict[str, object]:
+        candidates = tuple(
+            _candidate_result(candidate, clauses[candidate.clause_id])
+            for candidate in state["fused_candidates"]
+        )
+        outcome = reranker.rerank(state["retrieval_query"], candidates)
+        return {
+            "reranked_results": outcome.results,
+            "degraded_components": ("reranker_unavailable",)
+            if outcome.degraded
+            else (),
+            "trace_events": (
+                _event(
+                    "rerank_candidates",
+                    "reranker_degraded" if outcome.degraded else "reranking_completed",
+                    state["iteration"],
+                    model=outcome.model,
+                    degradation_reason=outcome.degradation_reason,
+                    position_changes=[
+                        {
+                            "clause_id": change.clause_id,
+                            "before": change.before,
+                            "after": change.after,
+                        }
+                        for change in outcome.changes
+                    ],
+                ),
+            ),
+        }
+
     def assess_evidence(state: RetrievalState) -> dict[str, object]:
         plan = _require_plan(state)
         predicates = {step.predicate for step in state["graph_paths"]}
@@ -194,22 +275,44 @@ def build_workflow(
         )
         evidence = _select_evidence(state, clauses)
         sufficient = not reasons and len(evidence) <= state["limits"].max_evidence_items
+        security_findings = [
+            {
+                "clause_id": item.clause_id,
+                "flags": list(item.security_flags),
+                "disposition": "retained_as_untrusted_evidence",
+            }
+            for item in evidence
+            if item.security_flags
+        ]
+        events = [
+            _event(
+                "assess_evidence",
+                "evidence_assessed",
+                state["iteration"],
+                requirements=requirements,
+                sufficient=sufficient,
+                reasons=list(reasons),
+                selected=[item.evidence_id for item in evidence],
+            )
+        ]
+        if security_findings:
+            events.append(
+                _event(
+                    "assess_evidence",
+                    "suspicious_evidence_flagged",
+                    state["iteration"],
+                    findings=security_findings,
+                    plan_unchanged=True,
+                    limits_unchanged=True,
+                    answer_policy_unchanged=True,
+                )
+            )
         return {
             "selected_evidence": evidence,
             "evidence_requirements": requirements,
             "evidence_sufficient": sufficient,
             "insufficiency_reasons": reasons,
-            "trace_events": (
-                _event(
-                    "assess_evidence",
-                    "evidence_assessed",
-                    state["iteration"],
-                    requirements=requirements,
-                    sufficient=sufficient,
-                    reasons=list(reasons),
-                    selected=[item.evidence_id for item in evidence],
-                ),
-            ),
+            "trace_events": tuple(events),
         }
 
     def reformulate_query(state: RetrievalState) -> dict[str, object]:
@@ -259,7 +362,9 @@ def build_workflow(
                 ),
             }
         synthesis, provider_call = provider.synthesize(
-            state["question"], state["selected_evidence"]
+            GroundingEnvelope(
+                question=state["question"], evidence=state["selected_evidence"]
+            )
         )
         return {
             "answer": synthesis.answer,
@@ -345,17 +450,24 @@ def build_workflow(
         }
 
     builder = StateGraph(RetrievalState)
-    builder.add_node("analyze_and_plan", analyze_and_plan)
-    builder.add_node("lexical_retrieve", lexical_retrieve)
-    builder.add_node("vector_retrieve", vector_retrieve)
-    builder.add_node("graph_retrieve", graph_retrieve)
-    builder.add_node("fuse_candidates", fuse_candidates)
-    builder.add_node("assess_evidence", assess_evidence)
-    builder.add_node("reformulate_query", reformulate_query)
-    builder.add_node("synthesize_answer", synthesize_answer)
-    builder.add_node("verify_citations", verify_citations)
-    builder.add_node("finalize_insufficient", finalize_insufficient)
-    builder.add_node("finalize_trace", finalize_trace)
+    nodes: tuple[
+        tuple[str, Callable[[RetrievalState], dict[str, object]]], ...
+    ] = (
+        ("analyze_and_plan", analyze_and_plan),
+        ("lexical_retrieve", lexical_retrieve),
+        ("vector_retrieve", vector_retrieve),
+        ("graph_retrieve", graph_retrieve),
+        ("fuse_candidates", fuse_candidates),
+        ("rerank_candidates", rerank_candidates),
+        ("assess_evidence", assess_evidence),
+        ("reformulate_query", reformulate_query),
+        ("synthesize_answer", synthesize_answer),
+        ("verify_citations", verify_citations),
+        ("finalize_insufficient", finalize_insufficient),
+        ("finalize_trace", finalize_trace),
+    )
+    for node_name, node in nodes:
+        builder.add_node(node_name, _instrument_node(telemetry, node_name, node))
 
     builder.add_edge(START, "analyze_and_plan")
     for retriever_node in ("lexical_retrieve", "vector_retrieve", "graph_retrieve"):
@@ -363,7 +475,8 @@ def build_workflow(
     builder.add_edge(
         ["lexical_retrieve", "vector_retrieve", "graph_retrieve"], "fuse_candidates"
     )
-    builder.add_edge("fuse_candidates", "assess_evidence")
+    builder.add_edge("fuse_candidates", "rerank_candidates")
+    builder.add_edge("rerank_candidates", "assess_evidence")
     builder.add_conditional_edges("assess_evidence", _route_after_assessment)
     for retriever_node in ("lexical_retrieve", "vector_retrieve", "graph_retrieve"):
         builder.add_edge("reformulate_query", retriever_node)
@@ -403,6 +516,30 @@ def _graph_result(clause: Clause) -> SearchResult:
         rank=1,
         retriever="graph-bounded-amendment",
     )
+
+
+def _candidate_result(candidate: FusedCandidate, clause: Clause) -> SearchResult:
+    return SearchResult(
+        clause_id=clause.clause_id,
+        document_id=clause.document_id,
+        page_number=clause.page_number,
+        section=clause.section,
+        title=clause.title,
+        text=clause.text,
+        score=candidate.score,
+        rank=candidate.rank,
+        retriever="rrf",
+    )
+
+
+def _delayed_vector_search(
+    vector: ExactVectorRetriever,
+    query: str,
+    limit: int,
+    timeout_ms: int,
+) -> tuple[SearchResult, ...]:
+    time.sleep((timeout_ms + 5) / 1000)
+    return vector.search(query, limit=limit)
 
 
 def _reciprocal_rank_fusion(
@@ -455,6 +592,7 @@ def _select_evidence(
                 section=clause.section,
                 text=clause.text,
                 retrieval_sources=sources,
+                security_flags=_security_flags(clause.text),
             )
         )
     return tuple(selected[: state["limits"].max_evidence_items])
@@ -486,3 +624,73 @@ def _event(node: str, event_type: str, iteration: int, **details: object) -> Tra
         iteration=iteration,
         details=dict(details),
     )
+
+
+def _security_flags(text: str) -> tuple[str, ...]:
+    normalized = text.casefold()
+    patterns = {
+        "instruction_override": ("ignore the contract", "ignore prior instructions"),
+        "system_instruction_request": ("reveal system instructions", "system prompt"),
+        "tool_control_language": ("change tools", "invoke tool", "disable retrieval"),
+    }
+    return tuple(
+        flag
+        for flag, indicators in patterns.items()
+        if any(indicator in normalized for indicator in indicators)
+    )
+
+
+def _instrument_node(
+    telemetry: TelemetryRecorder | None,
+    node_name: str,
+    node: Callable[[RetrievalState], dict[str, object]],
+) -> Callable[[RetrievalState], dict[str, object]]:
+    if telemetry is None:
+        return node
+
+    def instrumented(state: RetrievalState) -> dict[str, object]:
+        operation = (
+            "text_completion"
+            if node_name in {"analyze_and_plan", "reformulate_query", "synthesize_answer"}
+            else "retrieval"
+            if node_name.endswith("retrieve")
+            else "invoke_workflow"
+        )
+        attributes: dict[str, object] = {
+            "gen_ai.operation.name": operation,
+            "contractgraph.run.id": state["run_id"],
+            "contractgraph.node.name": node_name,
+            "contractgraph.iteration": state["iteration"],
+            "contractgraph.question.sha256": content_hash(state["question"]),
+            "contractgraph.limit.graph_depth": state["limits"].max_graph_depth,
+            "contractgraph.limit.candidates": state[
+                "limits"
+            ].max_candidates_per_retriever,
+        }
+        if operation == "text_completion":
+            attributes["gen_ai.provider.name"] = "replay"
+            attributes["gen_ai.request.model"] = "recorded-structured-output"
+        if operation == "retrieval":
+            attributes["gen_ai.data_source.id"] = "contractgraph-synthetic-corpus"
+        with telemetry.span(f"contractgraph.{node_name}", attributes) as span:
+            result = node(state)
+            events = tuple(result.get("trace_events", ()))
+            span.set_attribute(
+                "contractgraph.degraded",
+                bool(result.get("degraded_components")),
+            )
+            span.set_attribute(
+                "contractgraph.security.suspicious_evidence",
+                any(
+                    event.event_type == "suspicious_evidence_flagged"
+                    for event in events
+                ),
+            )
+            span.set_attribute(
+                "contractgraph.timeout",
+                any(event.event_type == "retrieval_timeout" for event in events),
+            )
+            return result
+
+    return instrumented
+    AmendmentResolutionRequest,
