@@ -22,7 +22,7 @@ ContractGraph is a trustworthy retrieval prototype over fictional enterprise IT 
 | Event; TRIGGERED_BY | What must happen after a security event or severity-one incident? | Reviewed clause assertion | Trigger-constrained obligation traversal | Returned obligation is connected to the requested event within three hops. |
 | Policy; REFERENCES | Which policy governs the notification duty? | Reviewed reference assertion | Obligation answer enrichment | Referenced policy ID exists and the source clause is preserved. |
 | ProductOrService; COVERS | Compare similar supplier duties across contracts. | Reviewed covered-service assertion | `compare_contracts` | Only requested contracts and bounded matching clauses are returned. |
-| CONFLICTS_WITH | Which older clause conflicts with the current term? | Reviewed amendment assertion | Conflict explanation | Conflict is paired with a SUPERSEDES edge so precedence is explicit. |
+| CONFLICTS_WITH | Do competing clauses have a deterministic precedence path? | Reviewed assertion | Conflict assessment and bounded analyst review | Superseded conflicts resolve automatically; an unresolved agreement/exhibit pair pauses for analyst abstention or controlling evidence. |
 | LOCATED_ON, EXTRACTED_FROM | Where did this evidence come from? | Canonical parser records or reviewed assertion | `trace_provenance`, citations | Clause, page, chunk, and source document all exist. |
 | REFERENCES MissingReference | What does missing Schedule Z require? | Reviewed missing-reference assertion | Insufficient-evidence response | The sentinel is returned; no schedule content or answer is invented. |
 

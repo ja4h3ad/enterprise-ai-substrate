@@ -1,5 +1,5 @@
 {
-  "corpus_digest": "ee424aa83aab1bc8b564933dbc8293616bf48f5297f5c05aca49c73653a131a8",
+  "corpus_digest": "a39b62296b0997f9e2322886d502f3f34615f41f10b9f9e67299e5efe19fa2f6",
   "dataset": {
     "distribution": {
       "adversarial": 1,
@@ -173,7 +173,7 @@
             "replay_identity_reranker"
           ],
           "estimated_cost_usd": 0.0,
-          "estimated_tokens": 99,
+          "estimated_tokens": 104,
           "expected_clause_ids": [
             "CLAUSE-DELTA-EXHIBIT-D-D.2"
           ],
@@ -205,7 +205,7 @@
             "CLAUSE-DELTA-EXHIBIT-D-D.8",
             "CLAUSE-DELTA-EXHIBIT-D-D.9",
             "CLAUSE-DELTA-EXHIBIT-D-D.1",
-            "CLAUSE-DELTA-EXHIBIT-D-D.13"
+            "CLAUSE-DELTA-EXHIBIT-D-D.11"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-DELTA-001"
@@ -538,15 +538,15 @@
           "question": "How soon does Fjord have to tell us about a severe software weakness?",
           "retrieved_clause_ids": [
             "CLAUSE-FJORD-SLA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-CEDAR-ESA-2025-4.1",
+            "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-ATLAS-EXHIBIT-C-C.6"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-FJORD-001",
-            "CONTRACT-BOREALIS-001",
             "CONTRACT-CEDAR-001",
+            "CONTRACT-BOREALIS-001",
             "CONTRACT-ATLAS-001"
           ],
           "status": "answered",
@@ -625,7 +625,7 @@
             "replay_identity_reranker"
           ],
           "estimated_cost_usd": 0.0,
-          "estimated_tokens": 171,
+          "estimated_tokens": 182,
           "expected_clause_ids": [
             "CLAUSE-BOREALIS-AMENDMENT-001-2"
           ],
@@ -653,9 +653,9 @@
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2",
-            "CLAUSE-BOREALIS-CHA-2025-1.1"
+            "CLAUSE-BOREALIS-CHA-2025-4.2"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
@@ -737,7 +737,7 @@
             "replay_identity_reranker"
           ],
           "estimated_cost_usd": 0.0,
-          "estimated_tokens": 163,
+          "estimated_tokens": 175,
           "expected_clause_ids": [
             "CLAUSE-BOREALIS-AMENDMENT-001-2"
           ],
@@ -765,9 +765,9 @@
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-DELTA-DPA-2025-3.1",
-            "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-5.1"
+            "CLAUSE-DELTA-DPA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
@@ -797,7 +797,7 @@
             "replay_identity_reranker"
           ],
           "estimated_cost_usd": 0.0,
-          "estimated_tokens": 125,
+          "estimated_tokens": 140,
           "expected_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.6",
             "CLAUSE-ATLAS-EXHIBIT-C-C.10"
@@ -836,11 +836,12 @@
             "CLAUSE-ATLAS-EXHIBIT-C-C.6",
             "CLAUSE-ATLAS-EXHIBIT-C-C.10",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.13",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.9"
+            "CLAUSE-ATLAS-EXHIBIT-C-C.9",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13"
           ],
           "retrieved_contract_ids": [
-            "CONTRACT-ATLAS-001"
+            "CONTRACT-ATLAS-001",
+            "CONTRACT-DELTA-001"
           ],
           "status": "answered",
           "tool_calls": 4
@@ -927,7 +928,7 @@
             "replay_identity_reranker"
           ],
           "estimated_cost_usd": 0.0,
-          "estimated_tokens": 146,
+          "estimated_tokens": 147,
           "expected_clause_ids": [
             "CLAUSE-CEDAR-ESA-2025-4.1",
             "CLAUSE-CEDAR-ESA-2025-4.2"
@@ -959,11 +960,12 @@
             "CLAUSE-CEDAR-ESA-2025-4.2",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-CEDAR-ESA-2025-1.1",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.6"
+            "CLAUSE-DELTA-EXHIBIT-D-D.13"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-CEDAR-001",
-            "CONTRACT-ATLAS-001"
+            "CONTRACT-ATLAS-001",
+            "CONTRACT-DELTA-001"
           ],
           "status": "answered",
           "tool_calls": 4
@@ -1019,8 +1021,8 @@
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-CEDAR-ESA-2025-4.1",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
-            "CLAUSE-BOREALIS-CHA-2025-1.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2"
+            "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-BOREALIS-CHA-2025-1.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
@@ -1051,7 +1053,7 @@
             "replay_identity_reranker"
           ],
           "estimated_cost_usd": 0.0,
-          "estimated_tokens": 138,
+          "estimated_tokens": 152,
           "expected_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.6",
             "CLAUSE-DELTA-DPA-2025-4.1"
@@ -1082,7 +1084,7 @@
             "CLAUSE-DELTA-DPA-2025-4.1",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-DELTA-DPA-2025-1.1",
-            "CLAUSE-DELTA-EXHIBIT-D-D.1"
+            "CLAUSE-DELTA-EXHIBIT-D-D.13"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
@@ -1235,7 +1237,7 @@
             "replay_identity_reranker"
           ],
           "estimated_cost_usd": 0.0,
-          "estimated_tokens": 157,
+          "estimated_tokens": 167,
           "expected_clause_ids": [
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-BOREALIS-CHA-2025-4.2"
@@ -1263,12 +1265,13 @@
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-CEDAR-AMENDMENT-001-6",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.7",
-            "CLAUSE-BOREALIS-CHA-2025-1.1"
+            "CLAUSE-ATLAS-EXHIBIT-C-C.7"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
+            "CONTRACT-DELTA-001",
             "CONTRACT-CEDAR-001",
             "CONTRACT-ATLAS-001"
           ],
@@ -1515,8 +1518,8 @@
         },
         "estimated_tokens": {
           "count": 24,
-          "mean": 144.208333,
-          "total": 3461
+          "mean": 147.041667,
+          "total": 3529
         },
         "graph_path_correctness": {
           "denominator": 14,
@@ -1666,7 +1669,7 @@
             "CLAUSE-DELTA-EXHIBIT-D-D.8",
             "CLAUSE-DELTA-EXHIBIT-D-D.9",
             "CLAUSE-DELTA-EXHIBIT-D-D.1",
-            "CLAUSE-DELTA-EXHIBIT-D-D.13"
+            "CLAUSE-DELTA-EXHIBIT-D-D.11"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-DELTA-001"
@@ -1985,15 +1988,15 @@
           "question": "How soon does Fjord have to tell us about a severe software weakness?",
           "retrieved_clause_ids": [
             "CLAUSE-FJORD-SLA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-CEDAR-ESA-2025-4.1",
+            "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-ATLAS-EXHIBIT-C-C.6"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-FJORD-001",
-            "CONTRACT-BOREALIS-001",
             "CONTRACT-CEDAR-001",
+            "CONTRACT-BOREALIS-001",
             "CONTRACT-ATLAS-001"
           ],
           "status": "answered",
@@ -2087,10 +2090,10 @@
           "question": "What is Borealis's current deadline for reporting unauthorized access after the security amendment?",
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-DELTA-DPA-2025-4.1",
             "CLAUSE-BOREALIS-CHA-2025-4.2",
-            "CLAUSE-BOREALIS-AMENDMENT-001-2",
-            "CLAUSE-BOREALIS-CHA-2025-1.1"
+            "CLAUSE-BOREALIS-AMENDMENT-001-2"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
@@ -2187,10 +2190,10 @@
           "question": "Does Borealis still have forty-eight hours to report a data breach?",
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-DELTA-DPA-2025-3.1",
-            "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-5.1"
+            "CLAUSE-DELTA-DPA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
@@ -2243,12 +2246,13 @@
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-ATLAS-EXHIBIT-C-C.6",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.13",
             "CLAUSE-ATLAS-EXHIBIT-C-C.9",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-BOREALIS-CHA-2025-4.2"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
+            "CONTRACT-DELTA-001",
             "CONTRACT-BOREALIS-001"
           ],
           "status": "answered",
@@ -2337,7 +2341,7 @@
             "TRIGGERED_BY",
             "REFERENCES"
           ],
-          "failure_classification": "correct",
+          "failure_classification": "other_retrieval_miss",
           "graph_path": [],
           "item_id": "G16",
           "iterations": 1,
@@ -2346,13 +2350,14 @@
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-CEDAR-ESA-2025-1.1",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-ATLAS-EXHIBIT-C-C.6",
-            "CLAUSE-CEDAR-ESA-2025-4.1",
-            "CLAUSE-CEDAR-ESA-2025-4.2"
+            "CLAUSE-CEDAR-ESA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
-            "CONTRACT-CEDAR-001"
+            "CONTRACT-CEDAR-001",
+            "CONTRACT-DELTA-001"
           ],
           "status": "answered",
           "tool_calls": 2
@@ -2396,8 +2401,8 @@
           "question": "Compare Borealis and Cedar deadlines for notifying Northstar about unauthorized access.",
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
-            "CLAUSE-BOREALIS-CHA-2025-1.1",
             "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-BOREALIS-CHA-2025-1.1",
             "CLAUSE-CEDAR-ESA-2025-1.1",
             "CLAUSE-BOREALIS-AMENDMENT-001-2"
           ],
@@ -2449,9 +2454,9 @@
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-DELTA-DPA-2025-1.1",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-DELTA-EXHIBIT-D-D.1",
-            "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.4"
+            "CLAUSE-DELTA-DPA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
@@ -2591,13 +2596,14 @@
           "question": "Borealis contains forty-eight-hour and twenty-four-hour security notice terms. Resolve the conflict.",
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-CEDAR-AMENDMENT-001-6",
             "CLAUSE-ATLAS-EXHIBIT-C-C.7",
-            "CLAUSE-BOREALIS-AMENDMENT-001-2",
-            "CLAUSE-BOREALIS-CHA-2025-1.1"
+            "CLAUSE-BOREALIS-AMENDMENT-001-2"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
+            "CONTRACT-DELTA-001",
             "CONTRACT-CEDAR-001",
             "CONTRACT-ATLAS-001"
           ],
@@ -2787,9 +2793,9 @@
         },
         "multi_hop": {
           "denominator": 3,
-          "numerator": 2,
-          "percent": 66.67,
-          "value": 0.666667
+          "numerator": 1,
+          "percent": 33.33,
+          "value": 0.333333
         },
         "negative": {
           "denominator": 1,
@@ -2806,12 +2812,12 @@
       },
       "failure_classifications": {
         "ambiguous_question": 1,
-        "correct": 15,
+        "correct": 14,
         "correct_abstention": 0,
         "exact_term_displacement": 0,
         "missed_amendment": 0,
         "missing_evidence": 1,
-        "other_retrieval_miss": 3,
+        "other_retrieval_miss": 4,
         "superseded_clause_retrieval": 2,
         "unresolved_conflict": 2,
         "unsupported_claim": 0
@@ -2831,9 +2837,9 @@
         },
         "clause_accuracy": {
           "denominator": 23,
-          "numerator": 20,
-          "percent": 86.96,
-          "value": 0.869565
+          "numerator": 19,
+          "percent": 82.61,
+          "value": 0.826087
         },
         "contract_accuracy": {
           "denominator": 23,
@@ -2870,25 +2876,25 @@
         },
         "mrr": {
           "count": 23,
-          "mean": 0.769565,
-          "sum": 17.7
+          "mean": 0.755797,
+          "sum": 17.383333
         },
         "ndcg": {
           "count": 23,
-          "mean": 0.794219,
-          "sum": 18.267028
+          "mean": 0.772803,
+          "sum": 17.774465
         },
         "precision_at_k": {
           "denominator": 115,
-          "numerator": 27,
-          "percent": 23.48,
-          "value": 0.234783
+          "numerator": 26,
+          "percent": 22.61,
+          "value": 0.226087
         },
         "recall_at_k": {
           "denominator": 30,
-          "numerator": 27,
-          "percent": 90.0,
-          "value": 0.9
+          "numerator": 26,
+          "percent": 86.67,
+          "value": 0.866667
         },
         "retrieval_iterations": {
           "count": 24,
@@ -3006,7 +3012,7 @@
             "CLAUSE-DELTA-EXHIBIT-D-D.8",
             "CLAUSE-DELTA-EXHIBIT-D-D.9",
             "CLAUSE-DELTA-EXHIBIT-D-D.1",
-            "CLAUSE-DELTA-EXHIBIT-D-D.13"
+            "CLAUSE-DELTA-EXHIBIT-D-D.11"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-DELTA-001"
@@ -3325,15 +3331,15 @@
           "question": "How soon does Fjord have to tell us about a severe software weakness?",
           "retrieved_clause_ids": [
             "CLAUSE-FJORD-SLA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-CEDAR-ESA-2025-4.1",
+            "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-ATLAS-EXHIBIT-C-C.6"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-FJORD-001",
-            "CONTRACT-BOREALIS-001",
             "CONTRACT-CEDAR-001",
+            "CONTRACT-BOREALIS-001",
             "CONTRACT-ATLAS-001"
           ],
           "status": "answered",
@@ -3436,9 +3442,9 @@
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2",
-            "CLAUSE-BOREALIS-CHA-2025-1.1"
+            "CLAUSE-BOREALIS-CHA-2025-4.2"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
@@ -3544,9 +3550,9 @@
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-DELTA-DPA-2025-3.1",
-            "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-5.1"
+            "CLAUSE-DELTA-DPA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
@@ -3608,11 +3614,12 @@
             "CLAUSE-ATLAS-EXHIBIT-C-C.6",
             "CLAUSE-ATLAS-EXHIBIT-C-C.10",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.13",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.9"
+            "CLAUSE-ATLAS-EXHIBIT-C-C.9",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13"
           ],
           "retrieved_contract_ids": [
-            "CONTRACT-ATLAS-001"
+            "CONTRACT-ATLAS-001",
+            "CONTRACT-DELTA-001"
           ],
           "status": "answered",
           "tool_calls": 3
@@ -3722,11 +3729,12 @@
             "CLAUSE-CEDAR-ESA-2025-4.2",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-CEDAR-ESA-2025-1.1",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.6"
+            "CLAUSE-DELTA-EXHIBIT-D-D.13"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-CEDAR-001",
-            "CONTRACT-ATLAS-001"
+            "CONTRACT-ATLAS-001",
+            "CONTRACT-DELTA-001"
           ],
           "status": "answered",
           "tool_calls": 3
@@ -3775,8 +3783,8 @@
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-CEDAR-ESA-2025-4.1",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
-            "CLAUSE-BOREALIS-CHA-2025-1.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2"
+            "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-BOREALIS-CHA-2025-1.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
@@ -3831,7 +3839,7 @@
             "CLAUSE-DELTA-DPA-2025-4.1",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-DELTA-DPA-2025-1.1",
-            "CLAUSE-DELTA-EXHIBIT-D-D.1"
+            "CLAUSE-DELTA-EXHIBIT-D-D.13"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
@@ -3991,12 +3999,13 @@
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-CEDAR-AMENDMENT-001-6",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.7",
-            "CLAUSE-BOREALIS-CHA-2025-1.1"
+            "CLAUSE-ATLAS-EXHIBIT-C-C.7"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
+            "CONTRACT-DELTA-001",
             "CONTRACT-CEDAR-001",
             "CONTRACT-ATLAS-001"
           ],
@@ -4404,7 +4413,7 @@
             "CLAUSE-DELTA-EXHIBIT-D-D.8",
             "CLAUSE-DELTA-EXHIBIT-D-D.9",
             "CLAUSE-DELTA-EXHIBIT-D-D.1",
-            "CLAUSE-DELTA-EXHIBIT-D-D.13"
+            "CLAUSE-DELTA-EXHIBIT-D-D.11"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-DELTA-001"
@@ -4737,15 +4746,15 @@
           "question": "How soon does Fjord have to tell us about a severe software weakness?",
           "retrieved_clause_ids": [
             "CLAUSE-FJORD-SLA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-CEDAR-ESA-2025-4.1",
+            "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-ATLAS-EXHIBIT-C-C.6"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-FJORD-001",
-            "CONTRACT-BOREALIS-001",
             "CONTRACT-CEDAR-001",
+            "CONTRACT-BOREALIS-001",
             "CONTRACT-ATLAS-001"
           ],
           "status": "answered",
@@ -4843,10 +4852,10 @@
           "question": "What is Borealis's current deadline for reporting unauthorized access after the security amendment?",
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-DELTA-DPA-2025-4.1",
             "CLAUSE-BOREALIS-CHA-2025-4.2",
-            "CLAUSE-BOREALIS-AMENDMENT-001-2",
-            "CLAUSE-BOREALIS-CHA-2025-1.1"
+            "CLAUSE-BOREALIS-AMENDMENT-001-2"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
@@ -4947,10 +4956,10 @@
           "question": "Does Borealis still have forty-eight hours to report a data breach?",
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
             "CLAUSE-DELTA-DPA-2025-3.1",
-            "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-5.1"
+            "CLAUSE-DELTA-DPA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
@@ -5005,12 +5014,13 @@
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-ATLAS-EXHIBIT-C-C.6",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.13",
             "CLAUSE-ATLAS-EXHIBIT-C-C.9",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-BOREALIS-CHA-2025-4.2"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
+            "CONTRACT-DELTA-001",
             "CONTRACT-BOREALIS-001"
           ],
           "status": "answered",
@@ -5103,7 +5113,7 @@
             "TRIGGERED_BY",
             "REFERENCES"
           ],
-          "failure_classification": "correct",
+          "failure_classification": "other_retrieval_miss",
           "graph_path": [],
           "item_id": "G16",
           "iterations": 1,
@@ -5112,13 +5122,14 @@
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-CEDAR-ESA-2025-1.1",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-ATLAS-EXHIBIT-C-C.6",
-            "CLAUSE-CEDAR-ESA-2025-4.1",
-            "CLAUSE-CEDAR-ESA-2025-4.2"
+            "CLAUSE-CEDAR-ESA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
-            "CONTRACT-CEDAR-001"
+            "CONTRACT-CEDAR-001",
+            "CONTRACT-DELTA-001"
           ],
           "status": "answered",
           "tool_calls": 3
@@ -5164,8 +5175,8 @@
           "question": "Compare Borealis and Cedar deadlines for notifying Northstar about unauthorized access.",
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
-            "CLAUSE-BOREALIS-CHA-2025-1.1",
             "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-BOREALIS-CHA-2025-1.1",
             "CLAUSE-CEDAR-ESA-2025-1.1",
             "CLAUSE-BOREALIS-AMENDMENT-001-2"
           ],
@@ -5219,9 +5230,9 @@
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-DELTA-DPA-2025-1.1",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-DELTA-EXHIBIT-D-D.1",
-            "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.4"
+            "CLAUSE-DELTA-DPA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
@@ -5367,13 +5378,14 @@
           "question": "Borealis contains forty-eight-hour and twenty-four-hour security notice terms. Resolve the conflict.",
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-CEDAR-AMENDMENT-001-6",
             "CLAUSE-ATLAS-EXHIBIT-C-C.7",
-            "CLAUSE-BOREALIS-AMENDMENT-001-2",
-            "CLAUSE-BOREALIS-CHA-2025-1.1"
+            "CLAUSE-BOREALIS-AMENDMENT-001-2"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
+            "CONTRACT-DELTA-001",
             "CONTRACT-CEDAR-001",
             "CONTRACT-ATLAS-001"
           ],
@@ -5569,9 +5581,9 @@
         },
         "multi_hop": {
           "denominator": 3,
-          "numerator": 2,
-          "percent": 66.67,
-          "value": 0.666667
+          "numerator": 1,
+          "percent": 33.33,
+          "value": 0.333333
         },
         "negative": {
           "denominator": 1,
@@ -5588,12 +5600,12 @@
       },
       "failure_classifications": {
         "ambiguous_question": 1,
-        "correct": 15,
+        "correct": 14,
         "correct_abstention": 0,
         "exact_term_displacement": 0,
         "missed_amendment": 0,
         "missing_evidence": 1,
-        "other_retrieval_miss": 3,
+        "other_retrieval_miss": 4,
         "superseded_clause_retrieval": 2,
         "unresolved_conflict": 2,
         "unsupported_claim": 0
@@ -5613,9 +5625,9 @@
         },
         "clause_accuracy": {
           "denominator": 23,
-          "numerator": 20,
-          "percent": 86.96,
-          "value": 0.869565
+          "numerator": 19,
+          "percent": 82.61,
+          "value": 0.826087
         },
         "contract_accuracy": {
           "denominator": 23,
@@ -5652,25 +5664,25 @@
         },
         "mrr": {
           "count": 23,
-          "mean": 0.769565,
-          "sum": 17.7
+          "mean": 0.755797,
+          "sum": 17.383333
         },
         "ndcg": {
           "count": 23,
-          "mean": 0.794219,
-          "sum": 18.267028
+          "mean": 0.772803,
+          "sum": 17.774465
         },
         "precision_at_k": {
           "denominator": 115,
-          "numerator": 27,
-          "percent": 23.48,
-          "value": 0.234783
+          "numerator": 26,
+          "percent": 22.61,
+          "value": 0.226087
         },
         "recall_at_k": {
           "denominator": 30,
-          "numerator": 27,
-          "percent": 90.0,
-          "value": 0.9
+          "numerator": 26,
+          "percent": 86.67,
+          "value": 0.866667
         },
         "retrieval_iterations": {
           "count": 24,
@@ -5780,8 +5792,8 @@
             "CLAUSE-DELTA-EXHIBIT-D-D.2",
             "CLAUSE-DELTA-EXHIBIT-D-D.9",
             "CLAUSE-DELTA-EXHIBIT-D-D.8",
-            "CLAUSE-DELTA-EXHIBIT-D-D.13",
-            "CLAUSE-DELTA-EXHIBIT-D-D.1"
+            "CLAUSE-DELTA-EXHIBIT-D-D.1",
+            "CLAUSE-DELTA-EXHIBIT-D-D.11"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-DELTA-001"
@@ -5962,15 +5974,14 @@
             "CLAUSE-DELTA-DPA-2025-4.1",
             "CLAUSE-CEDAR-ESA-2025-4.1",
             "CLAUSE-BOREALIS-CHA-2025-4.2",
-            "CLAUSE-FJORD-SLA-2025-4.1",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.5"
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
+            "CLAUSE-FJORD-SLA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-DELTA-001",
             "CONTRACT-CEDAR-001",
             "CONTRACT-BOREALIS-001",
-            "CONTRACT-FJORD-001",
-            "CONTRACT-ATLAS-001"
+            "CONTRACT-FJORD-001"
           ],
           "status": "answered",
           "tool_calls": 1
@@ -6102,16 +6113,15 @@
           "retrieved_clause_ids": [
             "CLAUSE-FJORD-SLA-2025-4.1",
             "CLAUSE-CEDAR-ESA-2025-4.1",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-ATLAS-EXHIBIT-C-C.6",
-            "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2"
+            "CLAUSE-DELTA-DPA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-FJORD-001",
             "CONTRACT-CEDAR-001",
-            "CONTRACT-ATLAS-001",
             "CONTRACT-DELTA-001",
-            "CONTRACT-BOREALIS-001"
+            "CONTRACT-ATLAS-001"
           ],
           "status": "answered",
           "tool_calls": 1
@@ -6171,12 +6181,12 @@
           "answerability": true,
           "category": "amendment",
           "citations": [
-            "CLAUSE-ATLAS-EXHIBIT-C-C.5"
+            "CLAUSE-DELTA-EXHIBIT-D-D.13"
           ],
           "claims": [
             {
               "claim_id": "G11-CLAIM-1",
-              "clause_id": "CLAUSE-ATLAS-EXHIBIT-C-C.5"
+              "clause_id": "CLAUSE-DELTA-EXHIBIT-D-D.13"
             }
           ],
           "degraded_components": [],
@@ -6203,16 +6213,16 @@
           "latency_ms": 0.0,
           "question": "What is Borealis's current deadline for reporting unauthorized access after the security amendment?",
           "retrieved_clause_ids": [
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-FJORD-SLA-2025-4.1",
             "CLAUSE-DELTA-DPA-2025-4.1",
-            "CLAUSE-CEDAR-ESA-2025-4.1",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.6"
+            "CLAUSE-CEDAR-ESA-2025-4.1"
           ],
           "retrieved_contract_ids": [
+            "CONTRACT-DELTA-001",
             "CONTRACT-ATLAS-001",
             "CONTRACT-FJORD-001",
-            "CONTRACT-DELTA-001",
             "CONTRACT-CEDAR-001"
           ],
           "status": "answered",
@@ -6305,16 +6315,15 @@
           "question": "Does Borealis still have forty-eight hours to report a data breach?",
           "retrieved_clause_ids": [
             "CLAUSE-BOREALIS-CHA-2025-4.2",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-DELTA-DPA-2025-4.1",
             "CLAUSE-BOREALIS-AMENDMENT-001-2",
-            "CLAUSE-FJORD-SLA-2025-4.1",
-            "CLAUSE-ATLAS-EXHIBIT-C-C.6"
+            "CLAUSE-FJORD-SLA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-BOREALIS-001",
             "CONTRACT-DELTA-001",
-            "CONTRACT-FJORD-001",
-            "CONTRACT-ATLAS-001"
+            "CONTRACT-FJORD-001"
           ],
           "status": "answered",
           "tool_calls": 1
@@ -6364,13 +6373,14 @@
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
             "CLAUSE-BOREALIS-CHA-2025-4.2",
             "CLAUSE-CEDAR-ESA-2025-3.1",
-            "CLAUSE-FJORD-SLA-2025-4.1",
-            "CLAUSE-BOREALIS-AMENDMENT-001-2"
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
+            "CLAUSE-FJORD-SLA-2025-4.1"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
             "CONTRACT-BOREALIS-001",
             "CONTRACT-CEDAR-001",
+            "CONTRACT-DELTA-001",
             "CONTRACT-FJORD-001"
           ],
           "status": "answered",
@@ -6467,13 +6477,14 @@
           "question": "What event triggers Cedar's reporting duty and which security policy is referenced?",
           "retrieved_clause_ids": [
             "CLAUSE-ATLAS-EXHIBIT-C-C.5",
+            "CLAUSE-DELTA-EXHIBIT-D-D.13",
             "CLAUSE-CEDAR-ESA-2025-1.1",
             "CLAUSE-CEDAR-ESA-2025-4.1",
-            "CLAUSE-BOREALIS-CHA-2025-4.2",
-            "CLAUSE-BOREALIS-AMENDMENT-001-2"
+            "CLAUSE-BOREALIS-CHA-2025-4.2"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
+            "CONTRACT-DELTA-001",
             "CONTRACT-CEDAR-001",
             "CONTRACT-BOREALIS-001"
           ],
@@ -6574,12 +6585,13 @@
             "CLAUSE-CEDAR-ESA-2025-4.2",
             "CLAUSE-CEDAR-ESA-2025-4.1",
             "CLAUSE-BOREALIS-CHA-2025-4.2",
-            "CLAUSE-BOREALIS-CHA-2025-4.1"
+            "CLAUSE-DELTA-EXHIBIT-D-D.13"
           ],
           "retrieved_contract_ids": [
             "CONTRACT-ATLAS-001",
             "CONTRACT-CEDAR-001",
-            "CONTRACT-BOREALIS-001"
+            "CONTRACT-BOREALIS-001",
+            "CONTRACT-DELTA-001"
           ],
           "status": "answered",
           "tool_calls": 1
@@ -6962,9 +6974,9 @@
         },
         "contract_accuracy": {
           "denominator": 23,
-          "numerator": 21,
-          "percent": 91.3,
-          "value": 0.913043
+          "numerator": 22,
+          "percent": 95.65,
+          "value": 0.956522
         },
         "estimated_cost_usd": {
           "count": 24,
@@ -6995,13 +7007,13 @@
         },
         "mrr": {
           "count": 23,
-          "mean": 0.698551,
-          "sum": 16.066667
+          "mean": 0.691304,
+          "sum": 15.9
         },
         "ndcg": {
           "count": 23,
-          "mean": 0.702434,
-          "sum": 16.155976
+          "mean": 0.697572,
+          "sum": 16.044147
         },
         "precision_at_k": {
           "denominator": 115,

@@ -1,0 +1,27 @@
+{
+  "question": "Delta's agreement says twenty-four hours while Exhibit D says forty-eight hours for confirmed Customer Data compromise. Which deadline controls?",
+  "plan": {
+    "intent": "unresolved_contractual_conflict",
+    "entities": ["Delta Data Foundry", "Exhibit D"],
+    "constraints": {
+      "clause_type": "security_incident_notification",
+      "operative_at": "current"
+    },
+    "retrieval_query": "confirmed Customer Data compromise security operations notify hours",
+    "contract_id": "CONTRACT-DELTA-001",
+    "base_clause_id": "CLAUSE-DELTA-DPA-2025-4.1",
+    "retrievers": ["lexical", "vector", "graph"],
+    "required_evidence": [
+      "base_clause",
+      "competing_evidence",
+      "unresolved_precedence"
+    ]
+  },
+  "reformulation": {
+    "retrieval_query": "Delta security incident notification Agreement Exhibit D precedence"
+  },
+  "synthesis": {
+    "answer": "The evidence conflicts and requires analyst review.",
+    "claims": []
+  }
+}

@@ -2,18 +2,20 @@
 
 from __future__ import annotations
 
-import operator
 import time
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from collections.abc import Callable
+from datetime import UTC, datetime
 from typing import Annotated, Literal, TypedDict
 
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
+from langgraph.types import interrupt
 
 from contractgraph.application_models import (
     AmendmentResolutionRequest,
+    AnalystDecision,
     Citation,
     Claim,
     Evidence,
@@ -31,6 +33,10 @@ from contractgraph.providers import ModelProvider
 from contractgraph.reranking import LocalCrossEncoderReranker
 from contractgraph.retrieval import BM25Retriever, ExactVectorRetriever
 from contractgraph.telemetry import TelemetryRecorder, content_hash
+
+
+def _concat_sequences(left: object, right: object) -> tuple[object, ...]:
+    return (*tuple(left), *tuple(right))  # type: ignore[arg-type]
 
 
 class RetrievalState(TypedDict):
@@ -59,9 +65,13 @@ class RetrievalState(TypedDict):
     citations_valid: bool
     answer: str | None
     status: str
-    degraded_components: Annotated[tuple[str, ...], operator.add]
-    errors: Annotated[tuple[str, ...], operator.add]
-    trace_events: Annotated[tuple[TraceEvent, ...], operator.add]
+    review_required: bool
+    conflict_reasons: tuple[str, ...]
+    review_decision: dict[str, object] | None
+    review_requested_at: str | None
+    degraded_components: Annotated[tuple[str, ...], _concat_sequences]
+    errors: Annotated[tuple[str, ...], _concat_sequences]
+    trace_events: Annotated[tuple[TraceEvent, ...], _concat_sequences]
 
 
 def build_workflow(
@@ -162,6 +172,30 @@ def build_workflow(
             max_depth=state["limits"].max_graph_depth,
             max_candidates=state["limits"].max_candidates_per_retriever,
         )
+        if plan.intent == "unresolved_contractual_conflict":
+            conflict_path = graph_retriever.conflicts_for_clause(
+                request.base_clause_id, limit=request.max_candidates
+            )
+            conflict_ids = (request.base_clause_id,) + tuple(
+                step.to_id for step in conflict_path
+            )
+            results = tuple(
+                _graph_result(clauses[clause_id], rank=rank, retriever="graph-conflict")
+                for rank, clause_id in enumerate(conflict_ids, start=1)
+            )
+            return {
+                "graph_results": results,
+                "graph_paths": conflict_path,
+                "trace_events": (
+                    _event(
+                        "graph_retrieve",
+                        "retrieval_completed",
+                        state["iteration"],
+                        candidates=list(conflict_ids),
+                        path=[_step_details(step) for step in conflict_path],
+                    ),
+                ),
+            }
         resolution = graph_retriever.resolve_operative_clause(
             contract_id=request.contract_id,
             base_clause_id=request.base_clause_id,
@@ -179,16 +213,7 @@ def build_workflow(
                     "retrieval_completed",
                     state["iteration"],
                     candidates=[operative.clause_id],
-                    path=[
-                        {
-                            "from": step.from_id,
-                            "predicate": step.predicate,
-                            "to": step.to_id,
-                            "traversal": step.traversal,
-                            "source_clause_id": step.source_clause_id,
-                        }
-                        for step in resolution.path
-                    ],
+                    path=[_step_details(step) for step in resolution.path],
                 ),
             ),
         }
@@ -267,6 +292,10 @@ def build_workflow(
                 step.source_clause_id in clauses for step in state["graph_paths"]
             )
             and bool(state["graph_paths"]),
+            "competing_evidence": "CONFLICTS_WITH" in predicates
+            and len(state["graph_results"]) >= 2,
+            "unresolved_precedence": "CONFLICTS_WITH" in predicates
+            and "SUPERSEDES" not in predicates,
         }
         reasons = tuple(
             f"missing:{requirement}"
@@ -275,6 +304,21 @@ def build_workflow(
         )
         evidence = _select_evidence(state, clauses)
         sufficient = not reasons and len(evidence) <= state["limits"].max_evidence_items
+        review_required = (
+            plan.intent == "unresolved_contractual_conflict"
+            and requirements["competing_evidence"]
+            and requirements["unresolved_precedence"]
+            and sufficient
+        )
+        conflict_reasons = (
+            (
+                "competing_clause_language",
+                "no_deterministic_precedence_path",
+            )
+            if review_required
+            else ()
+        )
+        review_requested_at = datetime.now(UTC).isoformat() if review_required else None
         security_findings = [
             {
                 "clause_id": item.clause_id,
@@ -291,6 +335,9 @@ def build_workflow(
                 state["iteration"],
                 requirements=requirements,
                 sufficient=sufficient,
+                review_required=review_required,
+                conflict_reasons=list(conflict_reasons),
+                review_requested_at=review_requested_at,
                 reasons=list(reasons),
                 selected=[item.evidence_id for item in evidence],
             )
@@ -312,7 +359,68 @@ def build_workflow(
             "evidence_requirements": requirements,
             "evidence_sufficient": sufficient,
             "insufficiency_reasons": reasons,
+            "review_required": review_required,
+            "conflict_reasons": conflict_reasons,
+            "status": "review_required" if review_required else state["status"],
+            "review_requested_at": review_requested_at,
             "trace_events": tuple(events),
+        }
+
+    def analyst_review(state: RetrievalState) -> dict[str, object]:
+        decision_data = interrupt(
+            {
+                "run_id": state["run_id"],
+                "conflict_reasons": list(state["conflict_reasons"]),
+                "evidence": [item.model_dump(mode="json") for item in state["selected_evidence"]],
+                "limits": state["limits"].model_dump(mode="json"),
+            }
+        )
+        raw_decision = dict(decision_data)
+        decided_at = str(raw_decision.pop("decided_at"))
+        decision = AnalystDecision.model_validate(raw_decision)
+        before_status = state["status"]
+        if decision.disposition == "abstain":
+            return {
+                "review_decision": decision.model_dump(mode="json"),
+                "status": "insufficient_evidence",
+                "answer": None,
+                "claims": (),
+                "citations": (),
+                "insufficiency_reasons": (
+                    *state["conflict_reasons"],
+                    "analyst_abstained",
+                ),
+                "trace_events": (
+                    _review_event(
+                        state,
+                        decision,
+                        before_status,
+                        "insufficient_evidence",
+                        decided_at,
+                    ),
+                ),
+            }
+        selected = next(
+            item
+            for item in state["selected_evidence"]
+            if item.evidence_id == decision.controlling_evidence_id
+        )
+        claim = Claim(
+            claim_id="CLAIM-ANALYST-001",
+            text=selected.text,
+            evidence_ids=(selected.evidence_id,),
+        )
+        return {
+            "review_decision": decision.model_dump(mode="json"),
+            "selected_evidence": (selected,),
+            "answer": selected.text,
+            "claims": (claim,),
+            "status": "review_resolved",
+            "trace_events": (
+                _review_event(
+                    state, decision, before_status, "review_resolved", decided_at
+                ),
+            ),
         }
 
     def reformulate_query(state: RetrievalState) -> dict[str, object]:
@@ -460,6 +568,7 @@ def build_workflow(
         ("fuse_candidates", fuse_candidates),
         ("rerank_candidates", rerank_candidates),
         ("assess_evidence", assess_evidence),
+        ("analyst_review", analyst_review),
         ("reformulate_query", reformulate_query),
         ("synthesize_answer", synthesize_answer),
         ("verify_citations", verify_citations),
@@ -478,6 +587,7 @@ def build_workflow(
     builder.add_edge("fuse_candidates", "rerank_candidates")
     builder.add_edge("rerank_candidates", "assess_evidence")
     builder.add_conditional_edges("assess_evidence", _route_after_assessment)
+    builder.add_conditional_edges("analyst_review", _route_after_review)
     for retriever_node in ("lexical_retrieve", "vector_retrieve", "graph_retrieve"):
         builder.add_edge("reformulate_query", retriever_node)
     builder.add_edge("synthesize_answer", "verify_citations")
@@ -489,12 +599,24 @@ def build_workflow(
 
 def _route_after_assessment(
     state: RetrievalState,
-) -> Literal["synthesize_answer", "reformulate_query", "finalize_insufficient"]:
+) -> Literal[
+    "analyst_review", "synthesize_answer", "reformulate_query", "finalize_insufficient"
+]:
+    if state["review_required"]:
+        return "analyst_review"
     if state["evidence_sufficient"]:
         return "synthesize_answer"
     if state["iteration"] < state["limits"].max_retrieval_iterations:
         return "reformulate_query"
     return "finalize_insufficient"
+
+
+def _route_after_review(
+    state: RetrievalState,
+) -> Literal["verify_citations", "finalize_trace"]:
+    if state["status"] == "review_resolved":
+        return "verify_citations"
+    return "finalize_trace"
 
 
 def _require_plan(state: RetrievalState) -> RetrievalPlan:
@@ -504,7 +626,9 @@ def _require_plan(state: RetrievalState) -> RetrievalPlan:
     return plan
 
 
-def _graph_result(clause: Clause) -> SearchResult:
+def _graph_result(
+    clause: Clause, *, rank: int = 1, retriever: str = "graph-bounded-amendment"
+) -> SearchResult:
     return SearchResult(
         clause_id=clause.clause_id,
         document_id=clause.document_id,
@@ -513,8 +637,8 @@ def _graph_result(clause: Clause) -> SearchResult:
         title=clause.title,
         text=clause.text,
         score=1.0,
-        rank=1,
-        retriever="graph-bounded-amendment",
+        rank=rank,
+        retriever=retriever,
     )
 
 
@@ -623,6 +747,49 @@ def _event(node: str, event_type: str, iteration: int, **details: object) -> Tra
         event_type=event_type,
         iteration=iteration,
         details=dict(details),
+    )
+
+
+def _step_details(step: GraphStep) -> dict[str, str]:
+    return {
+        "from": step.from_id,
+        "predicate": step.predicate,
+        "to": step.to_id,
+        "traversal": step.traversal,
+        "source_clause_id": step.source_clause_id,
+    }
+
+
+def _review_event(
+    state: RetrievalState,
+    decision: AnalystDecision,
+    before_status: str,
+    after_status: str,
+    decided_at: str,
+) -> TraceEvent:
+    return _event(
+        "analyst_review",
+        "human_decision_recorded",
+        state["iteration"],
+        disposition=decision.disposition,
+        rationale=decision.rationale,
+        controlling_evidence_id=decision.controlling_evidence_id,
+        before_status=before_status,
+        after_status=after_status,
+        decided_at=decided_at,
+        before_state={
+            "status": before_status,
+            "evidence_ids": [item.evidence_id for item in state["selected_evidence"]],
+            "conflict_reasons": list(state["conflict_reasons"]),
+        },
+        after_state={
+            "status": after_status,
+            "controlling_evidence_id": decision.controlling_evidence_id,
+        },
+        timestamps={
+            "review_requested_at": state["review_requested_at"],
+            "decided_at": decided_at,
+        },
     )
 
 
