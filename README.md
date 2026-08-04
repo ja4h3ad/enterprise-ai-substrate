@@ -46,6 +46,23 @@ uv run contractgraph run \
 
 OpenTelemetry spans cover the run and major workflow nodes. Privacy-safe defaults record identifiers, hashes, limits, statuses, scores, and low-cardinality security/degradation fields—not full questions, prompts, clauses, or answers. `--capture-content` explicitly enables question and answer attributes for this synthetic local demo. See [ADR 0002](docs/adr/0002-secure-degraded-execution.md).
 
+Model economics are visible per call: route and reason, model, prompt version, replay or live usage tokens, provider prompt-cache reads and writes, local exact-cache status, latency, pricing version, and estimated cost. Replay is the keyless default. Running the same command twice against the same state database demonstrates local cache hits while fresh lexical, vector, and graph retrieval still appear in the second trace:
+
+```bash
+uv run contractgraph run
+uv run contractgraph run
+```
+
+Live mode is deliberately opt-in and is the only paid integration. Routine calls use `gpt-5.6-luna`; `--higher-reasoning` permits deterministic `gpt-5.6-sol` escalation only for qualifying asymmetric synthesis. Exact local reuse can be disabled independently.
+
+```bash
+OPENAI_API_KEY=... uv run contractgraph run --provider-mode live
+OPENAI_API_KEY=... uv run contractgraph run --provider-mode live --higher-reasoning
+uv run contractgraph run --no-local-response-cache
+```
+
+There is no semantic response cache. Exact keys cover the model, exact node prompt, prompt version, response schema, policy, corpus digest, normalized input, and selected evidence hashes. Unknown pricing configurations report `unknown`. See [ADR 0003](docs/adr/0003-model-economics-and-exact-cache.md).
+
 ## Enterprise AI Substrate
 
 ## Architectural thesis

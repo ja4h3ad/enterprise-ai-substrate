@@ -15,6 +15,7 @@ from contractgraph.application import (
 from contractgraph.application_models import (
     ContractGraphRunConfig,
     FaultInjection,
+    ModelEconomicsConfig,
     RunLimits,
     TelemetryConfig,
 )
@@ -57,6 +58,19 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--artifacts", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     run.add_argument("--state-db", type=Path, default=DEFAULT_STATE_DB)
     run.add_argument("--replay-fixture", type=Path, default=DEFAULT_REPLAY_FIXTURE)
+    run.add_argument(
+        "--provider-mode", choices=("replay", "live"), default="replay"
+    )
+    run.add_argument(
+        "--higher-reasoning",
+        action="store_true",
+        help="allow deterministic escalation of qualifying asymmetric synthesis",
+    )
+    run.add_argument(
+        "--no-local-response-cache",
+        action="store_true",
+        help="disable exact version-safe model-node response reuse",
+    )
     run.add_argument(
         "--vector-timeout",
         action="store_true",
@@ -110,11 +124,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if arguments.command == "run":
         run_config = ContractGraphRunConfig(
+            provider_mode=arguments.provider_mode,
             limits=RunLimits(
                 local_retriever_timeout_ms=arguments.retriever_timeout_ms
             ),
             faults=FaultInjection(vector_timeout=arguments.vector_timeout),
             telemetry=TelemetryConfig(capture_content=arguments.capture_content),
+            model_economics=ModelEconomicsConfig(
+                enable_higher_reasoning=arguments.higher_reasoning,
+                local_response_cache=not arguments.no_local_response_cache,
+            ),
         )
         with ContractGraphApplication(
             artifact_root=arguments.artifacts,
