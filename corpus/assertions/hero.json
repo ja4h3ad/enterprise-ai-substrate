@@ -364,6 +364,13 @@
     "population_method": "reviewed_assertion"
   },
   {
+    "subject": "CLAUSE-DELTA-DPA-2025-4.1",
+    "predicate": "CONFLICTS_WITH",
+    "object": "CLAUSE-DELTA-EXHIBIT-D-D.13",
+    "source_clause_id": "CLAUSE-DELTA-EXHIBIT-D-D.13",
+    "population_method": "reviewed_assertion"
+  },
+  {
     "subject": "CLAUSE-DELTA-EXHIBIT-D-D.7",
     "predicate": "CREATES_OBLIGATION",
     "object": "OBLIGATION-DELTA-SEV1-UPDATE",

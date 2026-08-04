@@ -10,7 +10,13 @@ from typing import Protocol, Sequence
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.checkpoint.sqlite import SqliteSaver
 
-from contractgraph.application_models import AnswerResult, RunLimits, TraceEvent
+from contractgraph.application_models import (
+    AnalystDecision,
+    AnswerResult,
+    ReviewPacket,
+    RunLimits,
+    TraceEvent,
+)
 
 
 class TraceRepository(Protocol):
@@ -75,6 +81,18 @@ class SQLiteTraceRepository:
                 details_json TEXT NOT NULL,
                 UNIQUE(run_id, sequence)
             );
+
+            CREATE TABLE IF NOT EXISTS analyst_reviews (
+                run_id TEXT PRIMARY KEY REFERENCES agent_runs(run_id),
+                status TEXT NOT NULL CHECK(status IN ('pending', 'resuming', 'resolved')),
+                checkpoint_id TEXT NOT NULL,
+                packet_json TEXT NOT NULL,
+                decision_json TEXT,
+                before_status TEXT NOT NULL,
+                after_status TEXT,
+                created_at TEXT NOT NULL,
+                resolved_at TEXT
+            );
             """
         )
         columns = {
@@ -99,6 +117,10 @@ class SQLiteTraceRepository:
         self._connection.commit()
 
     def append_events(self, run_id: str, events: Sequence[TraceEvent]) -> None:
+        existing = self._connection.execute(
+            "SELECT COUNT(*) FROM trace_events WHERE run_id = ?", (run_id,)
+        ).fetchone()[0]
+        new_events = events[existing:]
         self._connection.executemany(
             """
             INSERT INTO trace_events (
@@ -114,10 +136,87 @@ class SQLiteTraceRepository:
                     event.iteration,
                     json.dumps(event.details, sort_keys=True),
                 )
-                for sequence, event in enumerate(events, start=1)
+                for sequence, event in enumerate(new_events, start=existing + 1)
             ],
         )
         self._connection.commit()
+
+    def pause_for_review(self, result: AnswerResult, packet: ReviewPacket) -> None:
+        with self._connection:
+            self._connection.execute(
+                """
+                UPDATE agent_runs
+                SET status = ?, iterations = ?, model_calls = ?, result_json = ?
+                WHERE run_id = ? AND status = 'running'
+                """,
+                (
+                    result.status,
+                    result.iterations,
+                    result.model_calls,
+                    result.model_dump_json(),
+                    result.run_id,
+                ),
+            )
+            self._connection.execute(
+                """
+                INSERT INTO analyst_reviews (
+                    run_id, status, checkpoint_id, packet_json, before_status,
+                    created_at
+                ) VALUES (?, 'pending', ?, ?, 'review_required', ?)
+                """,
+                (
+                    packet.run_id,
+                    packet.checkpoint_id,
+                    packet.model_dump_json(),
+                    packet.created_at.isoformat(),
+                ),
+            )
+
+    def read_review(self, run_id: str) -> ReviewPacket:
+        row = self._connection.execute(
+            "SELECT * FROM analyst_reviews WHERE run_id = ?", (run_id,)
+        ).fetchone()
+        if row is None:
+            raise LookupError(f"No analyst review for run: {run_id}")
+        packet = ReviewPacket.model_validate_json(row["packet_json"])
+        return packet.model_copy(
+            update={
+                "status": row["status"],
+                "resolved_at": row["resolved_at"],
+            }
+        )
+
+    def begin_review_resolution(
+        self, run_id: str, checkpoint_id: str, decision: AnalystDecision
+    ) -> ReviewPacket:
+        with self._connection:
+            cursor = self._connection.execute(
+                """
+                UPDATE analyst_reviews
+                SET status = 'resuming', decision_json = ?
+                WHERE run_id = ? AND checkpoint_id = ? AND status = 'pending'
+                """,
+                (decision.model_dump_json(), run_id, checkpoint_id),
+            )
+            if cursor.rowcount != 1:
+                raise RuntimeError("stale_or_already_resolved_checkpoint")
+        return self.read_review(run_id)
+
+    def complete_review_resolution(
+        self, result: AnswerResult, resolved_at: str
+    ) -> ReviewPacket:
+        with self._connection:
+            cursor = self._connection.execute(
+                """
+                UPDATE analyst_reviews
+                SET status = 'resolved', after_status = ?, resolved_at = ?
+                WHERE run_id = ? AND status = 'resuming'
+                """,
+                (result.status, resolved_at, result.run_id),
+            )
+            if cursor.rowcount != 1:
+                raise RuntimeError("review_resolution_not_in_progress")
+        return self.read_review(result.run_id)
 
     def complete_run(self, result: AnswerResult) -> None:
         self._connection.execute(

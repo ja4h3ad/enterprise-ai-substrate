@@ -113,7 +113,7 @@ Repeated failure permits termination under Section 9.1 of the Agreement.
 <!-- clause:
 clause_id: CLAUSE-DELTA-EXHIBIT-D-D.13
 section: D.13
-title: Reporting
+title: Security Incident Reporting
 -->
-Supplier will provide a monthly service-level report.
+Supplier must notify Customer's security operations center within forty-eight hours after confirming compromise of Customer Data.
 <!-- /clause -->

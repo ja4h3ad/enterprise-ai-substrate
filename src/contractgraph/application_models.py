@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -148,3 +149,41 @@ class RetrievalBundle(FrozenModel):
     lexical: tuple[SearchResult, ...] = ()
     vector: tuple[SearchResult, ...] = ()
     graph: tuple[SearchResult, ...] = ()
+
+
+class ReviewEvidence(FrozenModel):
+    evidence_id: str
+    clause_id: str
+    document_id: str
+    page_number: int
+    section: str
+    text: str
+
+
+class ReviewPacket(FrozenModel):
+    run_id: str
+    status: Literal["pending", "resuming", "resolved"]
+    conflict_reasons: tuple[str, ...]
+    evidence: tuple[ReviewEvidence, ...]
+    limits: RunLimits
+    checkpoint_id: str
+    created_at: datetime
+    resolved_at: datetime | None = None
+
+
+class AnalystDecision(FrozenModel):
+    disposition: Literal["abstain", "select_controlling_evidence"]
+    rationale: str = Field(min_length=10, max_length=2000)
+    controlling_evidence_id: str | None = None
+
+    def model_post_init(self, __context: Any) -> None:
+        selected = self.disposition == "select_controlling_evidence"
+        if selected != (self.controlling_evidence_id is not None):
+            raise ValueError(
+                "controlling_evidence_id is required only when selecting evidence"
+            )
+
+
+class ReviewResolution(FrozenModel):
+    packet: ReviewPacket
+    result: AnswerResult
