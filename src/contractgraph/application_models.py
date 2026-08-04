@@ -33,11 +33,21 @@ class TelemetryConfig(FrozenModel):
     capture_content: bool = False
 
 
+class ModelEconomicsConfig(FrozenModel):
+    economical_model: str = "gpt-5.6-luna"
+    higher_reasoning_model: str = "gpt-5.6-sol"
+    enable_higher_reasoning: bool = False
+    local_response_cache: bool = True
+    prompt_version: str = "contractgraph-v1"
+    pricing_version: str = "openai-2026-08-04"
+
+
 class ContractGraphRunConfig(FrozenModel):
-    provider_mode: Literal["replay"] = "replay"
+    provider_mode: Literal["replay", "live"] = "replay"
     limits: RunLimits = Field(default_factory=RunLimits)
     faults: FaultInjection = Field(default_factory=FaultInjection)
     telemetry: TelemetryConfig = Field(default_factory=TelemetryConfig)
+    model_economics: ModelEconomicsConfig = Field(default_factory=ModelEconomicsConfig)
 
 
 class RetrievalPlan(FrozenModel):
@@ -99,6 +109,25 @@ class TraceEvent(FrozenModel):
     details: dict[str, Any] = Field(default_factory=dict)
 
 
+class ProviderCall(FrozenModel):
+    operation: Literal["analyze_and_plan", "reformulate", "synthesize"]
+    provider: str
+    model: str
+    replay_key: str
+    route: Literal["economical", "higher_reasoning"] = "economical"
+    route_reason: str = "default_economical_route"
+    prompt_version: str = "contractgraph-v1"
+    input_tokens: int = 0
+    output_tokens: int = 0
+    provider_cached_input_tokens: int = 0
+    provider_cache_write_tokens: int = 0
+    latency_ms: float = 0.0
+    estimated_cost_usd: float | None = 0.0
+    pricing_version: str = "replay-zero-cost-v1"
+    local_cache_status: Literal["disabled", "hit", "miss"] = "disabled"
+    cache_key: str | None = None
+
+
 class AnswerResult(FrozenModel):
     run_id: str
     status: Literal[
@@ -114,6 +143,7 @@ class AnswerResult(FrozenModel):
     fused_candidates: tuple[FusedCandidate, ...]
     iterations: int
     model_calls: int
+    provider_calls: tuple[ProviderCall, ...]
     limits: RunLimits
     trace_events: tuple[TraceEvent, ...]
 
@@ -136,13 +166,6 @@ class AmendmentResolutionRequest(FrozenModel):
     base_clause_id: str = Field(pattern=r"^CLAUSE-[A-Z0-9.-]+$")
     max_depth: int = Field(ge=1, le=3)
     max_candidates: int = Field(ge=1, le=20)
-
-
-class ProviderCall(FrozenModel):
-    operation: Literal["analyze_and_plan", "reformulate", "synthesize"]
-    provider: str
-    model: str
-    replay_key: str
 
 
 class RetrievalBundle(FrozenModel):

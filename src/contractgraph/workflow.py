@@ -104,6 +104,7 @@ def build_workflow(
                     entities=list(plan.entities),
                     retrieval_query=plan.retrieval_query,
                     required_evidence=list(plan.required_evidence),
+                    model_economics=_provider_call_details(provider_call),
                 ),
             ),
         }
@@ -451,6 +452,7 @@ def build_workflow(
                     state["iteration"] + 1,
                     retrieval_query=retrieval_query,
                     reasons=list(state["insufficiency_reasons"]),
+                    model_economics=_provider_call_details(provider_call),
                 ),
             ),
         }
@@ -486,6 +488,7 @@ def build_workflow(
                     state["iteration"],
                     claims=[claim.claim_id for claim in synthesis.claims],
                     evidence=[item.evidence_id for item in state["selected_evidence"]],
+                    model_economics=_provider_call_details(provider_call),
                 ),
             ),
         }
@@ -760,6 +763,10 @@ def _step_details(step: GraphStep) -> dict[str, str]:
     }
 
 
+def _provider_call_details(call: ProviderCall) -> dict[str, object]:
+    return call.model_dump(mode="json")
+
+
 def _review_event(
     state: RetrievalState,
     decision: AnalystDecision,
@@ -834,14 +841,25 @@ def _instrument_node(
                 "limits"
             ].max_candidates_per_retriever,
         }
-        if operation == "text_completion":
-            attributes["gen_ai.provider.name"] = "replay"
-            attributes["gen_ai.request.model"] = "recorded-structured-output"
         if operation == "retrieval":
             attributes["gen_ai.data_source.id"] = "contractgraph-synthetic-corpus"
         with telemetry.span(f"contractgraph.{node_name}", attributes) as span:
             result = node(state)
             events = tuple(result.get("trace_events", ()))
+            provider_calls = tuple(result.get("provider_calls", ()))
+            if provider_calls:
+                call = provider_calls[-1]
+                span.set_attribute("gen_ai.provider.name", call.provider)
+                span.set_attribute("gen_ai.request.model", call.model)
+                span.set_attribute("gen_ai.usage.input_tokens", call.input_tokens)
+                span.set_attribute("gen_ai.usage.output_tokens", call.output_tokens)
+                span.set_attribute(
+                    "contractgraph.cache.local.status", call.local_cache_status
+                )
+                span.set_attribute(
+                    "contractgraph.cache.provider.cached_tokens",
+                    call.provider_cached_input_tokens,
+                )
             span.set_attribute(
                 "contractgraph.degraded",
                 bool(result.get("degraded_components")),

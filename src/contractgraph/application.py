@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+import os
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -13,14 +14,17 @@ from contractgraph.application_models import (
     AnswerResult,
     AnalystDecision,
     ContractGraphRunConfig,
+    ModelEconomicsConfig,
     ReviewEvidence,
     ReviewPacket,
     ReviewResolution,
     TraceEvent,
 )
 from contractgraph.artifacts import load_corpus
+from contractgraph.ingestion import artifact_digest
+from contractgraph.model_economics import ExactResponseCache
 from contractgraph.persistence import SQLiteCheckpointStore, SQLiteTraceRepository
-from contractgraph.providers import ReplayModelProvider
+from contractgraph.providers import OpenAIModelProvider, ReplayModelProvider
 from contractgraph.telemetry import RecordedSpan, TelemetryRecorder, content_hash
 from contractgraph.workflow import RetrievalState, build_workflow
 
@@ -38,11 +42,17 @@ class ContractGraphApplication:
         state_db: Path = DEFAULT_STATE_DB,
         replay_fixture: Path = DEFAULT_REPLAY_FIXTURE,
         telemetry: TelemetryRecorder | None = None,
+        openai_api_key: str | None = None,
     ) -> None:
         artifact = load_corpus(artifact_root)
+        self._artifact = artifact
+        self._corpus_digest = artifact_digest(artifact)
+        self._replay_fixture = replay_fixture
+        self._openai_api_key = openai_api_key
         self._trace_repository = SQLiteTraceRepository(state_db)
         self._checkpoint_store = SQLiteCheckpointStore(state_db)
-        self._provider = ReplayModelProvider(replay_fixture)
+        self._response_cache = ExactResponseCache(state_db)
+        self._provider = self._provider_for("replay", ModelEconomicsConfig())
         self._telemetry = telemetry or TelemetryRecorder()
         self._owns_telemetry = telemetry is None
         self._workflow = build_workflow(
@@ -58,6 +68,15 @@ class ContractGraphApplication:
         run_config: ContractGraphRunConfig | None = None,
     ) -> AnswerResult:
         config = run_config or ContractGraphRunConfig()
+        self._provider = self._provider_for(
+            config.provider_mode, config.model_economics
+        )
+        self._workflow = build_workflow(
+            self._artifact,
+            self._provider,
+            checkpointer=self._checkpoint_store.saver,
+            telemetry=self._telemetry,
+        )
         run_id = str(uuid4())
         self._trace_repository.create_run(run_id, question, config.limits)
         initial_state: RetrievalState = {
@@ -100,8 +119,8 @@ class ContractGraphApplication:
         }
         span_attributes: dict[str, object] = {
             "gen_ai.operation.name": "invoke_agent",
-            "gen_ai.provider.name": "replay",
-            "gen_ai.request.model": "recorded-structured-output",
+            "gen_ai.provider.name": config.provider_mode,
+            "gen_ai.request.model": config.model_economics.economical_model,
             "contractgraph.run.id": run_id,
             "contractgraph.question.sha256": content_hash(question),
             "contractgraph.capture_content": config.telemetry.capture_content,
@@ -215,10 +234,28 @@ class ContractGraphApplication:
         return self._telemetry.spans_for_run(run_id)
 
     def close(self) -> None:
+        self._response_cache.close()
         self._checkpoint_store.close()
         self._trace_repository.close()
         if self._owns_telemetry:
             self._telemetry.shutdown()
+
+    def _provider_for(
+        self, mode: str, economics: ModelEconomicsConfig
+    ) -> ReplayModelProvider | OpenAIModelProvider:
+        if mode == "live":
+            return OpenAIModelProvider(
+                api_key=self._openai_api_key or os.environ.get("OPENAI_API_KEY", ""),
+                economics=economics,
+                corpus_digest=self._corpus_digest,
+                cache=self._response_cache,
+            )
+        return ReplayModelProvider(
+            self._replay_fixture,
+            economics=economics,
+            corpus_digest=self._corpus_digest,
+            cache=self._response_cache,
+        )
 
     def __enter__(self) -> ContractGraphApplication:
         return self
@@ -244,6 +281,7 @@ def _answer_result(state: dict[str, Any]) -> AnswerResult:
         fused_candidates=tuple(state["fused_candidates"]),
         iterations=state["iteration"],
         model_calls=state["model_calls"],
+        provider_calls=tuple(state["provider_calls"]),
         limits=state["limits"],
         trace_events=tuple(state["trace_events"]),
     )
@@ -266,6 +304,7 @@ def _error_result(
         fused_candidates=(),
         iterations=0,
         model_calls=0,
+        provider_calls=(),
         limits=config.limits,
         trace_events=(
             TraceEvent(
@@ -289,8 +328,20 @@ def render_answer(result: AnswerResult) -> str:
         "Degraded components: "
         + (", ".join(result.degraded_components) or "none"),
         "",
-        "Claims and citations",
+        "Model economics",
     ]
+    for call in result.provider_calls:
+        cost = "unknown" if call.estimated_cost_usd is None else f"${call.estimated_cost_usd:.8f}"
+        lines.append(
+            f"- {call.operation}: route={call.route} model={call.model} "
+            f"local_cache={call.local_cache_status} provider_cached_tokens="
+            f"{call.provider_cached_input_tokens} tokens={call.input_tokens}/"
+            f"{call.output_tokens} cost={cost} latency_ms={call.latency_ms}"
+        )
+    lines.extend([
+        "",
+        "Claims and citations",
+    ])
     citations_by_claim: dict[str, list[str]] = {}
     for citation in result.citations:
         citations_by_claim.setdefault(citation.claim_id, []).append(
