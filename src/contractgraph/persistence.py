@@ -60,6 +60,7 @@ class SQLiteTraceRepository:
                 iterations INTEGER NOT NULL,
                 model_calls INTEGER NOT NULL,
                 limits_json TEXT NOT NULL,
+                result_json TEXT,
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 completed_at TEXT
             );
@@ -76,6 +77,14 @@ class SQLiteTraceRepository:
             );
             """
         )
+        columns = {
+            row[1]
+            for row in self._connection.execute("PRAGMA table_info(agent_runs)")
+        }
+        if "result_json" not in columns:
+            self._connection.execute(
+                "ALTER TABLE agent_runs ADD COLUMN result_json TEXT"
+            )
         self._connection.commit()
 
     def create_run(self, run_id: str, question: str, limits: RunLimits) -> None:
@@ -115,7 +124,7 @@ class SQLiteTraceRepository:
             """
             UPDATE agent_runs
             SET status = ?, answer = ?, iterations = ?, model_calls = ?,
-                completed_at = CURRENT_TIMESTAMP
+                result_json = ?, completed_at = CURRENT_TIMESTAMP
             WHERE run_id = ?
             """,
             (
@@ -123,6 +132,7 @@ class SQLiteTraceRepository:
                 result.answer,
                 result.iterations,
                 result.model_calls,
+                result.model_dump_json(),
                 result.run_id,
             ),
         )

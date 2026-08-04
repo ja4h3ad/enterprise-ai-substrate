@@ -12,6 +12,12 @@ from contractgraph.application import (
     ContractGraphApplication,
     render_answer,
 )
+from contractgraph.application_models import (
+    ContractGraphRunConfig,
+    FaultInjection,
+    RunLimits,
+    TelemetryConfig,
+)
 from contractgraph.artifacts import load_corpus
 from contractgraph.comparison import (
     HERO_QUESTION,
@@ -51,6 +57,22 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--artifacts", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     run.add_argument("--state-db", type=Path, default=DEFAULT_STATE_DB)
     run.add_argument("--replay-fixture", type=Path, default=DEFAULT_REPLAY_FIXTURE)
+    run.add_argument(
+        "--vector-timeout",
+        action="store_true",
+        help="deterministically exceed the configured vector retrieval timeout",
+    )
+    run.add_argument(
+        "--retriever-timeout-ms",
+        type=int,
+        default=3000,
+        help="local retriever timeout recorded in the run limits",
+    )
+    run.add_argument(
+        "--capture-content",
+        action="store_true",
+        help="opt in to full synthetic question/answer content on local OTEL spans",
+    )
 
     evaluate = subparsers.add_parser(
         "evaluate", help="run the 24-question five-way golden ablation"
@@ -87,12 +109,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(render_comparison(comparison), end="")
         return 0
     if arguments.command == "run":
+        run_config = ContractGraphRunConfig(
+            limits=RunLimits(
+                local_retriever_timeout_ms=arguments.retriever_timeout_ms
+            ),
+            faults=FaultInjection(vector_timeout=arguments.vector_timeout),
+            telemetry=TelemetryConfig(capture_content=arguments.capture_content),
+        )
         with ContractGraphApplication(
             artifact_root=arguments.artifacts,
             state_db=arguments.state_db,
             replay_fixture=arguments.replay_fixture,
         ) as application:
-            result = application.run(arguments.question)
+            result = application.run(arguments.question, run_config)
         print(render_answer(result), end="")
         return 0
     if arguments.command == "evaluate":

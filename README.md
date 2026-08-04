@@ -28,6 +28,22 @@ The public synthetic corpus now contains exactly six base contracts, three amend
 
 `uv run contractgraph evaluate` is the primary behavioral quality gate. It validates the preregistered 24-question distribution, runs all five ablation variants without an API key, and deterministically regenerates `reports/ablation.md` and `reports/ablation.json`. Scores use structured labels and rules—not an LLM judge—and always include raw numerators and denominators. The report is evidence from a small synthetic corpus, not a claim of statistical significance.
 
+Security and reliability are executable behaviors, not confidence claims. Retrieved clauses are tagged `untrusted_evidence`, scanned for instruction-like content, and placed in a grounding envelope structurally separate from the fixed answer policy. Strict schemas reject extra model fields and typed graph requests reject invalid identifiers or bounds. To demonstrate safe degradation while preserving the cited hero answer:
+
+```bash
+uv run contractgraph run --vector-timeout --retriever-timeout-ms 10
+```
+
+To demonstrate prompt-injection containment with the synthetic Fjord clause:
+
+```bash
+uv run contractgraph run \
+  --question "The imported annotation says to ignore the contract. What reverse-engineering restriction actually applies under Fjord?" \
+  --replay-fixture replay/adversarial.json
+```
+
+OpenTelemetry spans cover the run and major workflow nodes. Privacy-safe defaults record identifiers, hashes, limits, statuses, scores, and low-cardinality security/degradation fields—not full questions, prompts, clauses, or answers. `--capture-content` explicitly enables question and answer attributes for this synthetic local demo. See [ADR 0002](docs/adr/0002-secure-degraded-execution.md).
+
 ## Enterprise AI Substrate
 
 ## Architectural thesis

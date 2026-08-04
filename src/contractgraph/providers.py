@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Protocol, Sequence
 
 from contractgraph.application_models import (
-    Evidence,
+    GroundingEnvelope,
     ProviderCall,
     RetrievalPlan,
     SynthesisResult,
@@ -22,7 +22,7 @@ class ModelProvider(Protocol):
     ) -> tuple[str, ProviderCall]: ...
 
     def synthesize(
-        self, question: str, evidence: Sequence[Evidence]
+        self, envelope: GroundingEnvelope
     ) -> tuple[SynthesisResult, ProviderCall]: ...
 
 
@@ -56,13 +56,16 @@ class ReplayModelProvider:
         )
 
     def synthesize(
-        self, question: str, evidence: Sequence[Evidence]
+        self, envelope: GroundingEnvelope
     ) -> tuple[SynthesisResult, ProviderCall]:
-        if question != self._fixture["question"]:
+        if envelope.question != self._fixture["question"]:
             raise ValueError("Replay fixture does not match the requested question")
         # Provider outputs are untrusted even in replay mode. The deterministic
         # citation-verification node, not this adapter, owns support validation.
-        _ = evidence
+        # The fixed policy is structurally separate from document content, and every
+        # evidence item is explicitly tagged as untrusted evidence.
+        if any(item.trust_zone != "untrusted_evidence" for item in envelope.evidence):
+            raise ValueError("Grounding envelope contains an invalid evidence trust zone")
         result = SynthesisResult.model_validate(self._fixture["synthesis"])
         return result, self._call("synthesize")
 
